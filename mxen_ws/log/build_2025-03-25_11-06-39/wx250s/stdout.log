@@ -1,0 +1,22 @@
+running egg_info
+writing ../../build/wx250s/wx250s.egg-info/PKG-INFO
+writing dependency_links to ../../build/wx250s/wx250s.egg-info/dependency_links.txt
+writing entry points to ../../build/wx250s/wx250s.egg-info/entry_points.txt
+writing requirements to ../../build/wx250s/wx250s.egg-info/requires.txt
+writing top-level names to ../../build/wx250s/wx250s.egg-info/top_level.txt
+reading manifest file '../../build/wx250s/wx250s.egg-info/SOURCES.txt'
+writing manifest file '../../build/wx250s/wx250s.egg-info/SOURCES.txt'
+running build
+running build_py
+running install
+running install_lib
+running install_data
+running install_egg_info
+removing '/home/robot/ros2jazzy/GitRepo/MXEN3005/mxen_ws/install/wx250s/lib/python3.12/site-packages/wx250s-0.0.0-py3.12.egg-info' (and everything under it)
+Copying ../../build/wx250s/wx250s.egg-info to /home/robot/ros2jazzy/GitRepo/MXEN3005/mxen_ws/install/wx250s/lib/python3.12/site-packages/wx250s-0.0.0-py3.12.egg-info
+running install_scripts
+Installing gripper_node script to /home/robot/ros2jazzy/GitRepo/MXEN3005/mxen_ws/install/wx250s/lib/wx250s
+Installing homing_node script to /home/robot/ros2jazzy/GitRepo/MXEN3005/mxen_ws/install/wx250s/lib/wx250s
+Installing joint_ptp_node script to /home/robot/ros2jazzy/GitRepo/MXEN3005/mxen_ws/install/wx250s/lib/wx250s
+Installing joint_state_node script to /home/robot/ros2jazzy/GitRepo/MXEN3005/mxen_ws/install/wx250s/lib/wx250s
+writing list of installed files to '/home/robot/ros2jazzy/GitRepo/MXEN3005/mxen_ws/build/wx250s/install.log'

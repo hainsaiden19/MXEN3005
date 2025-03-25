@@ -621,6 +621,8 @@ _Python3_INCLUDE_DIR:INTERNAL=/usr/include/python3.12
 //Python3 Properties
 _Python3_INTERPRETER_PROPERTIES:INTERNAL=Python;3;12;3;64;;cpython-312-x86_64-linux-gnu;abi3;/usr/lib/python3.12;/home/robot/ros2jazzy/.ros2jazzyvenv/lib/python3.12;/home/robot/ros2jazzy/.ros2jazzyvenv/lib/python3.12/site-packages;/home/robot/ros2jazzy/.ros2jazzyvenv/lib/python3.12/site-packages
 _Python3_INTERPRETER_SIGNATURE:INTERNAL=c54e02d53311baf24c006b8b5b5bf52e
+//Interpreter reason failure
+_Python3_Interpreter_REASON_FAILURE:INTERNAL=
 //Path to a library.
 _Python3_LIBRARY_RELEASE:INTERNAL=/usr/lib/x86_64-linux-gnu/libpython3.12.so
 _Python3_NUMPY_SIGNATURE:INTERNAL=95170b171a25674d294ebb0b85704b58
