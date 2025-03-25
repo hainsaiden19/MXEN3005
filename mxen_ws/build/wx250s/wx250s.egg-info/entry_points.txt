@@ -1,5 +1,0 @@
-[console_scripts]
-gripper_node = wx250s.gripper_node:main
-homing_node = wx250s.homing_node:main
-joint_ptp_node = wx250s.joint_ptp_node:main
-joint_state_node = wx250s.joint_state_node:main
