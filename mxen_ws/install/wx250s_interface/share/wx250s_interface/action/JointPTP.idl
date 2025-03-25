@@ -1,0 +1,20 @@
+// generated from rosidl_adapter/resource/action.idl.em
+// with input from wx250s_interface/action/JointPTP.action
+// generated code does not contain a copyright notice
+
+
+module wx250s_interface {
+  module action {
+    typedef double double__6[6];
+    struct JointPTP_Goal {
+      double__6 joint_goal;
+    };
+    struct JointPTP_Result {
+      boolean success;
+    };
+    typedef double double__6[6];
+    struct JointPTP_Feedback {
+      double__6 joint_present;
+    };
+  };
+};

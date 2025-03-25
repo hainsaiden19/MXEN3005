@@ -1,0 +1,56 @@
+{
+  "type_description_msg": {
+    "type_description": {
+      "type_name": "wx250s_interface/action/JointPTP_GetResult_Response",
+      "fields": [
+        {
+          "name": "status",
+          "type": {
+            "type_id": 2,
+            "capacity": 0,
+            "string_capacity": 0,
+            "nested_type_name": ""
+          },
+          "default_value": ""
+        },
+        {
+          "name": "result",
+          "type": {
+            "type_id": 1,
+            "capacity": 0,
+            "string_capacity": 0,
+            "nested_type_name": "wx250s_interface/action/JointPTP_Result"
+          },
+          "default_value": ""
+        }
+      ]
+    },
+    "referenced_type_descriptions": [
+      {
+        "type_name": "wx250s_interface/action/JointPTP_Result",
+        "fields": [
+          {
+            "name": "success",
+            "type": {
+              "type_id": 15,
+              "capacity": 0,
+              "string_capacity": 0,
+              "nested_type_name": ""
+            },
+            "default_value": ""
+          }
+        ]
+      }
+    ]
+  },
+  "type_hashes": [
+    {
+      "type_name": "wx250s_interface/action/JointPTP_GetResult_Response",
+      "hash_string": "RIHS01_acad1d6ada5b945936f224ac69409a8bc8cfb3348f46ecfcf3137223640c2173"
+    },
+    {
+      "type_name": "wx250s_interface/action/JointPTP_Result",
+      "hash_string": "RIHS01_52af2c006cf01cab6dc2aef0f3f00efd10534af73130fdc7a7c6b4c72f08eb26"
+    }
+  ]
+}

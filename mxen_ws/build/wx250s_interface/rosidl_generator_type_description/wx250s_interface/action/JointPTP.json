@@ -1,0 +1,522 @@
+{
+  "type_description_msg": {
+    "type_description": {
+      "type_name": "wx250s_interface/action/JointPTP",
+      "fields": [
+        {
+          "name": "goal",
+          "type": {
+            "type_id": 1,
+            "capacity": 0,
+            "string_capacity": 0,
+            "nested_type_name": "wx250s_interface/action/JointPTP_Goal"
+          },
+          "default_value": ""
+        },
+        {
+          "name": "result",
+          "type": {
+            "type_id": 1,
+            "capacity": 0,
+            "string_capacity": 0,
+            "nested_type_name": "wx250s_interface/action/JointPTP_Result"
+          },
+          "default_value": ""
+        },
+        {
+          "name": "feedback",
+          "type": {
+            "type_id": 1,
+            "capacity": 0,
+            "string_capacity": 0,
+            "nested_type_name": "wx250s_interface/action/JointPTP_Feedback"
+          },
+          "default_value": ""
+        },
+        {
+          "name": "send_goal_service",
+          "type": {
+            "type_id": 1,
+            "capacity": 0,
+            "string_capacity": 0,
+            "nested_type_name": "wx250s_interface/action/JointPTP_SendGoal"
+          },
+          "default_value": ""
+        },
+        {
+          "name": "get_result_service",
+          "type": {
+            "type_id": 1,
+            "capacity": 0,
+            "string_capacity": 0,
+            "nested_type_name": "wx250s_interface/action/JointPTP_GetResult"
+          },
+          "default_value": ""
+        },
+        {
+          "name": "feedback_message",
+          "type": {
+            "type_id": 1,
+            "capacity": 0,
+            "string_capacity": 0,
+            "nested_type_name": "wx250s_interface/action/JointPTP_FeedbackMessage"
+          },
+          "default_value": ""
+        }
+      ]
+    },
+    "referenced_type_descriptions": [
+      {
+        "type_name": "builtin_interfaces/msg/Time",
+        "fields": [
+          {
+            "name": "sec",
+            "type": {
+              "type_id": 6,
+              "capacity": 0,
+              "string_capacity": 0,
+              "nested_type_name": ""
+            },
+            "default_value": ""
+          },
+          {
+            "name": "nanosec",
+            "type": {
+              "type_id": 7,
+              "capacity": 0,
+              "string_capacity": 0,
+              "nested_type_name": ""
+            },
+            "default_value": ""
+          }
+        ]
+      },
+      {
+        "type_name": "service_msgs/msg/ServiceEventInfo",
+        "fields": [
+          {
+            "name": "event_type",
+            "type": {
+              "type_id": 3,
+              "capacity": 0,
+              "string_capacity": 0,
+              "nested_type_name": ""
+            },
+            "default_value": ""
+          },
+          {
+            "name": "stamp",
+            "type": {
+              "type_id": 1,
+              "capacity": 0,
+              "string_capacity": 0,
+              "nested_type_name": "builtin_interfaces/msg/Time"
+            },
+            "default_value": ""
+          },
+          {
+            "name": "client_gid",
+            "type": {
+              "type_id": 51,
+              "capacity": 16,
+              "string_capacity": 0,
+              "nested_type_name": ""
+            },
+            "default_value": ""
+          },
+          {
+            "name": "sequence_number",
+            "type": {
+              "type_id": 8,
+              "capacity": 0,
+              "string_capacity": 0,
+              "nested_type_name": ""
+            },
+            "default_value": ""
+          }
+        ]
+      },
+      {
+        "type_name": "unique_identifier_msgs/msg/UUID",
+        "fields": [
+          {
+            "name": "uuid",
+            "type": {
+              "type_id": 51,
+              "capacity": 16,
+              "string_capacity": 0,
+              "nested_type_name": ""
+            },
+            "default_value": ""
+          }
+        ]
+      },
+      {
+        "type_name": "wx250s_interface/action/JointPTP_Feedback",
+        "fields": [
+          {
+            "name": "joint_present",
+            "type": {
+              "type_id": 59,
+              "capacity": 6,
+              "string_capacity": 0,
+              "nested_type_name": ""
+            },
+            "default_value": ""
+          }
+        ]
+      },
+      {
+        "type_name": "wx250s_interface/action/JointPTP_FeedbackMessage",
+        "fields": [
+          {
+            "name": "goal_id",
+            "type": {
+              "type_id": 1,
+              "capacity": 0,
+              "string_capacity": 0,
+              "nested_type_name": "unique_identifier_msgs/msg/UUID"
+            },
+            "default_value": ""
+          },
+          {
+            "name": "feedback",
+            "type": {
+              "type_id": 1,
+              "capacity": 0,
+              "string_capacity": 0,
+              "nested_type_name": "wx250s_interface/action/JointPTP_Feedback"
+            },
+            "default_value": ""
+          }
+        ]
+      },
+      {
+        "type_name": "wx250s_interface/action/JointPTP_GetResult",
+        "fields": [
+          {
+            "name": "request_message",
+            "type": {
+              "type_id": 1,
+              "capacity": 0,
+              "string_capacity": 0,
+              "nested_type_name": "wx250s_interface/action/JointPTP_GetResult_Request"
+            },
+            "default_value": ""
+          },
+          {
+            "name": "response_message",
+            "type": {
+              "type_id": 1,
+              "capacity": 0,
+              "string_capacity": 0,
+              "nested_type_name": "wx250s_interface/action/JointPTP_GetResult_Response"
+            },
+            "default_value": ""
+          },
+          {
+            "name": "event_message",
+            "type": {
+              "type_id": 1,
+              "capacity": 0,
+              "string_capacity": 0,
+              "nested_type_name": "wx250s_interface/action/JointPTP_GetResult_Event"
+            },
+            "default_value": ""
+          }
+        ]
+      },
+      {
+        "type_name": "wx250s_interface/action/JointPTP_GetResult_Event",
+        "fields": [
+          {
+            "name": "info",
+            "type": {
+              "type_id": 1,
+              "capacity": 0,
+              "string_capacity": 0,
+              "nested_type_name": "service_msgs/msg/ServiceEventInfo"
+            },
+            "default_value": ""
+          },
+          {
+            "name": "request",
+            "type": {
+              "type_id": 97,
+              "capacity": 1,
+              "string_capacity": 0,
+              "nested_type_name": "wx250s_interface/action/JointPTP_GetResult_Request"
+            },
+            "default_value": ""
+          },
+          {
+            "name": "response",
+            "type": {
+              "type_id": 97,
+              "capacity": 1,
+              "string_capacity": 0,
+              "nested_type_name": "wx250s_interface/action/JointPTP_GetResult_Response"
+            },
+            "default_value": ""
+          }
+        ]
+      },
+      {
+        "type_name": "wx250s_interface/action/JointPTP_GetResult_Request",
+        "fields": [
+          {
+            "name": "goal_id",
+            "type": {
+              "type_id": 1,
+              "capacity": 0,
+              "string_capacity": 0,
+              "nested_type_name": "unique_identifier_msgs/msg/UUID"
+            },
+            "default_value": ""
+          }
+        ]
+      },
+      {
+        "type_name": "wx250s_interface/action/JointPTP_GetResult_Response",
+        "fields": [
+          {
+            "name": "status",
+            "type": {
+              "type_id": 2,
+              "capacity": 0,
+              "string_capacity": 0,
+              "nested_type_name": ""
+            },
+            "default_value": ""
+          },
+          {
+            "name": "result",
+            "type": {
+              "type_id": 1,
+              "capacity": 0,
+              "string_capacity": 0,
+              "nested_type_name": "wx250s_interface/action/JointPTP_Result"
+            },
+            "default_value": ""
+          }
+        ]
+      },
+      {
+        "type_name": "wx250s_interface/action/JointPTP_Goal",
+        "fields": [
+          {
+            "name": "joint_goal",
+            "type": {
+              "type_id": 59,
+              "capacity": 6,
+              "string_capacity": 0,
+              "nested_type_name": ""
+            },
+            "default_value": ""
+          }
+        ]
+      },
+      {
+        "type_name": "wx250s_interface/action/JointPTP_Result",
+        "fields": [
+          {
+            "name": "success",
+            "type": {
+              "type_id": 15,
+              "capacity": 0,
+              "string_capacity": 0,
+              "nested_type_name": ""
+            },
+            "default_value": ""
+          }
+        ]
+      },
+      {
+        "type_name": "wx250s_interface/action/JointPTP_SendGoal",
+        "fields": [
+          {
+            "name": "request_message",
+            "type": {
+              "type_id": 1,
+              "capacity": 0,
+              "string_capacity": 0,
+              "nested_type_name": "wx250s_interface/action/JointPTP_SendGoal_Request"
+            },
+            "default_value": ""
+          },
+          {
+            "name": "response_message",
+            "type": {
+              "type_id": 1,
+              "capacity": 0,
+              "string_capacity": 0,
+              "nested_type_name": "wx250s_interface/action/JointPTP_SendGoal_Response"
+            },
+            "default_value": ""
+          },
+          {
+            "name": "event_message",
+            "type": {
+              "type_id": 1,
+              "capacity": 0,
+              "string_capacity": 0,
+              "nested_type_name": "wx250s_interface/action/JointPTP_SendGoal_Event"
+            },
+            "default_value": ""
+          }
+        ]
+      },
+      {
+        "type_name": "wx250s_interface/action/JointPTP_SendGoal_Event",
+        "fields": [
+          {
+            "name": "info",
+            "type": {
+              "type_id": 1,
+              "capacity": 0,
+              "string_capacity": 0,
+              "nested_type_name": "service_msgs/msg/ServiceEventInfo"
+            },
+            "default_value": ""
+          },
+          {
+            "name": "request",
+            "type": {
+              "type_id": 97,
+              "capacity": 1,
+              "string_capacity": 0,
+              "nested_type_name": "wx250s_interface/action/JointPTP_SendGoal_Request"
+            },
+            "default_value": ""
+          },
+          {
+            "name": "response",
+            "type": {
+              "type_id": 97,
+              "capacity": 1,
+              "string_capacity": 0,
+              "nested_type_name": "wx250s_interface/action/JointPTP_SendGoal_Response"
+            },
+            "default_value": ""
+          }
+        ]
+      },
+      {
+        "type_name": "wx250s_interface/action/JointPTP_SendGoal_Request",
+        "fields": [
+          {
+            "name": "goal_id",
+            "type": {
+              "type_id": 1,
+              "capacity": 0,
+              "string_capacity": 0,
+              "nested_type_name": "unique_identifier_msgs/msg/UUID"
+            },
+            "default_value": ""
+          },
+          {
+            "name": "goal",
+            "type": {
+              "type_id": 1,
+              "capacity": 0,
+              "string_capacity": 0,
+              "nested_type_name": "wx250s_interface/action/JointPTP_Goal"
+            },
+            "default_value": ""
+          }
+        ]
+      },
+      {
+        "type_name": "wx250s_interface/action/JointPTP_SendGoal_Response",
+        "fields": [
+          {
+            "name": "accepted",
+            "type": {
+              "type_id": 15,
+              "capacity": 0,
+              "string_capacity": 0,
+              "nested_type_name": ""
+            },
+            "default_value": ""
+          },
+          {
+            "name": "stamp",
+            "type": {
+              "type_id": 1,
+              "capacity": 0,
+              "string_capacity": 0,
+              "nested_type_name": "builtin_interfaces/msg/Time"
+            },
+            "default_value": ""
+          }
+        ]
+      }
+    ]
+  },
+  "type_hashes": [
+    {
+      "type_name": "wx250s_interface/action/JointPTP",
+      "hash_string": "RIHS01_5c82380bf1f5568475cfceb1ac044b897ea77cff535559eb593c36b5abc4be81"
+    },
+    {
+      "type_name": "builtin_interfaces/msg/Time",
+      "hash_string": "RIHS01_b106235e25a4c5ed35098aa0a61a3ee9c9b18d197f398b0e4206cea9acf9c197"
+    },
+    {
+      "type_name": "service_msgs/msg/ServiceEventInfo",
+      "hash_string": "RIHS01_41bcbbe07a75c9b52bc96bfd5c24d7f0fc0a08c0cb7921b3373c5732345a6f45"
+    },
+    {
+      "type_name": "unique_identifier_msgs/msg/UUID",
+      "hash_string": "RIHS01_1b8e8aca958cbea28fe6ef60bf6c19b683c97a9ef60bb34752067d0f2f7ab437"
+    },
+    {
+      "type_name": "wx250s_interface/action/JointPTP_Feedback",
+      "hash_string": "RIHS01_c8aba56a2f67f9d06dfe8012a37b2f3cc2eec36cf9441658db1e20c3b1758cc2"
+    },
+    {
+      "type_name": "wx250s_interface/action/JointPTP_FeedbackMessage",
+      "hash_string": "RIHS01_c9d5b1673c4a3c751e2d1578565daf0f395937f9bded898835612cfb91ea42d1"
+    },
+    {
+      "type_name": "wx250s_interface/action/JointPTP_GetResult",
+      "hash_string": "RIHS01_7d81f8b77927c79cff1bebbd63d46f491ce851b837cf379c5d57fcac422c4e18"
+    },
+    {
+      "type_name": "wx250s_interface/action/JointPTP_GetResult_Event",
+      "hash_string": "RIHS01_107deb87f5176bf83636addb7ae26e3a9a9cbbf83f4b1ab6bbecc43a4134723f"
+    },
+    {
+      "type_name": "wx250s_interface/action/JointPTP_GetResult_Request",
+      "hash_string": "RIHS01_dca605c6a32a27b5220966abb6a63f912293f427e8f0f1ca9b7e44fe2468ed47"
+    },
+    {
+      "type_name": "wx250s_interface/action/JointPTP_GetResult_Response",
+      "hash_string": "RIHS01_acad1d6ada5b945936f224ac69409a8bc8cfb3348f46ecfcf3137223640c2173"
+    },
+    {
+      "type_name": "wx250s_interface/action/JointPTP_Goal",
+      "hash_string": "RIHS01_f49fc49e968895b9de2a63f2119357211b4c65b930cf3803fb9c4da937435699"
+    },
+    {
+      "type_name": "wx250s_interface/action/JointPTP_Result",
+      "hash_string": "RIHS01_52af2c006cf01cab6dc2aef0f3f00efd10534af73130fdc7a7c6b4c72f08eb26"
+    },
+    {
+      "type_name": "wx250s_interface/action/JointPTP_SendGoal",
+      "hash_string": "RIHS01_924b55604f16e1e06e68471ac857bf129cb450e05d6717cca591bd98dd71fce9"
+    },
+    {
+      "type_name": "wx250s_interface/action/JointPTP_SendGoal_Event",
+      "hash_string": "RIHS01_f248569736ae5e43b3eb440fc688d5eea492a88f4ceac7fe4296ac10d833ee41"
+    },
+    {
+      "type_name": "wx250s_interface/action/JointPTP_SendGoal_Request",
+      "hash_string": "RIHS01_1c2e5837dff3603d1abbc586717da3c29b0da5fce0152808c149c230a2512a67"
+    },
+    {
+      "type_name": "wx250s_interface/action/JointPTP_SendGoal_Response",
+      "hash_string": "RIHS01_e88987c41769897cd4dd69e1c241bd3b20067156640f41496403bcc505c23a2d"
+    }
+  ]
+}

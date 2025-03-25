@@ -1,0 +1,6 @@
+setup.py
+wx250s_interface/__init__.py
+wx250s_interface.egg-info/PKG-INFO
+wx250s_interface.egg-info/SOURCES.txt
+wx250s_interface.egg-info/dependency_links.txt
+wx250s_interface.egg-info/top_level.txt

@@ -1,0 +1,7 @@
+<launch>
+    <executable cmd="python3 xarmserver.py" cwd="/home/robot/ros2jazzy/.ros2jazzysetup/u2d2server" output="screen" />
+    <node pkg="wx250s" exec="homing_node" />
+    <node pkg="wx250s" exec="gripper_node" />
+    <node pkg="wx250s" exec="joint_state_node" />
+    <node pkg="wx250s" exec="joint_ptp_node" />
+</launch>

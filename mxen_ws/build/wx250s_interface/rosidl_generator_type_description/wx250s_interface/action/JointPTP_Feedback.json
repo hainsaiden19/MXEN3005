@@ -1,0 +1,26 @@
+{
+  "type_description_msg": {
+    "type_description": {
+      "type_name": "wx250s_interface/action/JointPTP_Feedback",
+      "fields": [
+        {
+          "name": "joint_present",
+          "type": {
+            "type_id": 59,
+            "capacity": 6,
+            "string_capacity": 0,
+            "nested_type_name": ""
+          },
+          "default_value": ""
+        }
+      ]
+    },
+    "referenced_type_descriptions": []
+  },
+  "type_hashes": [
+    {
+      "type_name": "wx250s_interface/action/JointPTP_Feedback",
+      "hash_string": "RIHS01_c8aba56a2f67f9d06dfe8012a37b2f3cc2eec36cf9441658db1e20c3b1758cc2"
+    }
+  ]
+}

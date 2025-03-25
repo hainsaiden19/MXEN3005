@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "wx250s_interface__py",
+		"source" : "/home/robot/ros2jazzy/GitRepo/MXEN3005/mxen_ws/build/wx250s_interface/wx250s_interface__py"
+	}
+}

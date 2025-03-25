@@ -1,0 +1,26 @@
+{
+  "type_description_msg": {
+    "type_description": {
+      "type_name": "wx250s_interface/action/JointPTP_Goal",
+      "fields": [
+        {
+          "name": "joint_goal",
+          "type": {
+            "type_id": 59,
+            "capacity": 6,
+            "string_capacity": 0,
+            "nested_type_name": ""
+          },
+          "default_value": ""
+        }
+      ]
+    },
+    "referenced_type_descriptions": []
+  },
+  "type_hashes": [
+    {
+      "type_name": "wx250s_interface/action/JointPTP_Goal",
+      "hash_string": "RIHS01_f49fc49e968895b9de2a63f2119357211b4c65b930cf3803fb9c4da937435699"
+    }
+  ]
+}

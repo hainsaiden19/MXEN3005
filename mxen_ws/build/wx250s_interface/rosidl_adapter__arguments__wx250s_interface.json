@@ -1,0 +1,6 @@
+{
+  "package_name": "wx250s_interface",
+  "non_idl_tuples": [
+    "/home/robot/ros2jazzy/GitRepo/MXEN3005/mxen_ws/src/wx250s_interface:action/JointPTP.action"
+  ]
+}

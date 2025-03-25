@@ -1,0 +1,242 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-6ad7a4370ef3ccee8020.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.20"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4,
+						6,
+						7,
+						8,
+						9,
+						10,
+						11,
+						12,
+						13,
+						14,
+						15,
+						16,
+						17,
+						18
+					]
+				},
+				{
+					"build" : "wx250s_interface__py",
+					"jsonFile" : "directory-wx250s_interface__py-a0a7ceca0c69140d6aa6.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.20"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "/home/robot/ros2jazzy/GitRepo/MXEN3005/mxen_ws/build/wx250s_interface/wx250s_interface__py",
+					"targetIndexes" : 
+					[
+						5
+					]
+				}
+			],
+			"name" : "",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0,
+						1
+					],
+					"name" : "wx250s_interface",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4,
+						5,
+						6,
+						7,
+						8,
+						9,
+						10,
+						11,
+						12,
+						13,
+						14,
+						15,
+						16,
+						17,
+						18
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "ament_cmake_python_build_wx250s_interface_egg::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ament_cmake_python_build_wx250s_interface_egg-2c53281ba317e141b489.json",
+					"name" : "ament_cmake_python_build_wx250s_interface_egg",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "ament_cmake_python_copy_wx250s_interface::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ament_cmake_python_copy_wx250s_interface-e4591ddf021417b3c362.json",
+					"name" : "ament_cmake_python_copy_wx250s_interface",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "uninstall::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-uninstall-2b3ba051bee27876bbb8.json",
+					"name" : "uninstall",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "wx250s_interface::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-wx250s_interface-a62eefa56922a3812d52.json",
+					"name" : "wx250s_interface",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "wx250s_interface__cpp::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-wx250s_interface__cpp-daa0491b36381ed35e8e.json",
+					"name" : "wx250s_interface__cpp",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "wx250s_interface__py::@e3d82962d89c10ab75cd",
+					"jsonFile" : "target-wx250s_interface__py-5f736b120e4dbe6aaeeb.json",
+					"name" : "wx250s_interface__py",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "wx250s_interface__rosidl_generator_c::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-wx250s_interface__rosidl_generator_c-ffcc248aa630a9b1651f.json",
+					"name" : "wx250s_interface__rosidl_generator_c",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "wx250s_interface__rosidl_generator_py::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-wx250s_interface__rosidl_generator_py-f80a5d4ec81e6e860828.json",
+					"name" : "wx250s_interface__rosidl_generator_py",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "wx250s_interface__rosidl_generator_type_description::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-wx250s_interface__rosidl_generator_type_description-1158dda3ea3d92bb09ba.json",
+					"name" : "wx250s_interface__rosidl_generator_type_description",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "wx250s_interface__rosidl_typesupport_c::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-wx250s_interface__rosidl_typesupport_c-826fb4814281f37a2b1b.json",
+					"name" : "wx250s_interface__rosidl_typesupport_c",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "wx250s_interface__rosidl_typesupport_cpp::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-wx250s_interface__rosidl_typesupport_cpp-a8a8f47d2ccfab97e043.json",
+					"name" : "wx250s_interface__rosidl_typesupport_cpp",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "wx250s_interface__rosidl_typesupport_fastrtps_c::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-wx250s_interface__rosidl_typesupport_fastrtps_c-b0aa77afe2b681757e94.json",
+					"name" : "wx250s_interface__rosidl_typesupport_fastrtps_c",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "wx250s_interface__rosidl_typesupport_fastrtps_cpp::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-wx250s_interface__rosidl_typesupport_fastrtps_cpp-05e959b83443b956e67f.json",
+					"name" : "wx250s_interface__rosidl_typesupport_fastrtps_cpp",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "wx250s_interface__rosidl_typesupport_introspection_c::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-wx250s_interface__rosidl_typesupport_introspection_c-41ab9e5c2331c6237057.json",
+					"name" : "wx250s_interface__rosidl_typesupport_introspection_c",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "wx250s_interface__rosidl_typesupport_introspection_cpp::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-wx250s_interface__rosidl_typesupport_introspection_cpp-1c41713ef23d27c32c18.json",
+					"name" : "wx250s_interface__rosidl_typesupport_introspection_cpp",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "wx250s_interface_s__rosidl_typesupport_c::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-wx250s_interface_s__rosidl_typesupport_c-2dab3cb3a6315666b152.json",
+					"name" : "wx250s_interface_s__rosidl_typesupport_c",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "wx250s_interface_s__rosidl_typesupport_fastrtps_c::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-wx250s_interface_s__rosidl_typesupport_fastrtps_c-a72dc987ee53bcee94da.json",
+					"name" : "wx250s_interface_s__rosidl_typesupport_fastrtps_c",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "wx250s_interface_s__rosidl_typesupport_introspection_c::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-wx250s_interface_s__rosidl_typesupport_introspection_c-ac2b003a2a9a19b28271.json",
+					"name" : "wx250s_interface_s__rosidl_typesupport_introspection_c",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "wx250s_interface_uninstall::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-wx250s_interface_uninstall-0fdf56b8adbfaf933ed2.json",
+					"name" : "wx250s_interface_uninstall",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/home/robot/ros2jazzy/GitRepo/MXEN3005/mxen_ws/build/wx250s_interface",
+		"source" : "/home/robot/ros2jazzy/GitRepo/MXEN3005/mxen_ws/src/wx250s_interface"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 6
+	}
+}
