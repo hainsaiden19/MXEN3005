@@ -44,11 +44,6 @@ class JointPTPNode(Node):
             callback_group=ReentrantCallbackGroup(),
         )
 
-    def counter(self):
-        self.count += 1
-        self.get_logger().info(f"Timer: {(self.count)}")
-        return self.count
-
 
     def destroy(self):
         self.action_server.destroy()
@@ -92,75 +87,57 @@ class JointPTPNode(Node):
     def execute_callback(self, goal_handle):
         self.get_logger().info("## Executing Goal ##")
 
-        current_value = np.zeros(6)
-        joint_goal = np.array(goal_handle.request.joint_goal)
-        acceptable_difference = np.array((3, 3, 3, 2, 3, 2))
-        speed_threshold = np.array((1, 1, 1, 1, 1, 1))
-        speed_comparison = np.array((False,False,False,False,False,False))
+        joint_goal = goal_handle.request.joint_goal
+        acceptable_difference = [3, 3, 3, 2, 3, 2]
+        speed_threshold = [2, 2, 2, 2, 2, 2]
+        goal_achieved_array = np.array((False, False, False, False, False, False))
+
+        joint_previous = self.xarm.get_joints()
 
         feedback_msg = JointPTP.Feedback()
 
-        self.xarm.set_joints(list(joint_goal))
+        self.xarm.set_joints(joint_goal)
 
         goal_reached = False
-
-        self.count = 0
-
-        previous_joint = np.array(self.xarm.get_joints())
-
-
         while not goal_reached:
+            #        goal aborting and cancelling       #
             if not goal_handle.is_active:   
                 self.get_logger().info("Goal aborted")
                 return JointPTP.Result()
-
             if goal_handle.is_cancel_requested:
                 goal_handle.canceled()
                 self.get_logger().info("Goal canceled")
                 return JointPTP.Result()
+            #                                           #
         
             feedback_msg.joint_present = self.xarm.get_joints()
+            current_value = self.xarm.get_joints()
 
-            current_value = np.array(self.xarm.get_joints())
+            for i, joint_current in enumerate(current_value):
+                if abs(joint_goal[i] - joint_current) < acceptable_difference[i]:
+                    goal_achieved_array[i] = True
+                else: 
+                    if (abs(joint_current - joint_previous[i]) < speed_threshold[i]):
+                        goal_handle.abort()
+                        result = JointPTP.Result()
+                        result.success = False
+                        return result
 
-            if self.count >= 4:
-                speed_difference = np.abs(np.subtract(current_value, previous_joint))
-                speed_comparison = speed_difference <= speed_threshold
-
-            if (np.any(speed_comparison)):
-                goal_handle.abort()
-                result = JointPTP.Result()
-                result.success = False
-                #self.xarm.set_joints(self.xarm.get_joints())
-                return result
-
-            previous_joint = current_value
-
-            difference_matrix = np.abs(np.subtract(current_value, joint_goal))
-
-            comparison_matrix = difference_matrix <= acceptable_difference
-
-            if (np.all(comparison_matrix)):
-                goal_reached = True
+                if (np.all(goal_achieved_array)):
+                    goal_reached = True
 
             goal_handle.publish_feedback(feedback_msg)
-
-            self.counter()
-
             time.sleep(0.1)
-
 
         with self.goal_lock:
             if not goal_handle.is_active:
                 self.get_logger().info("Goal aborted")
                 return JointPTP.Result()
-
             goal_handle.succeed()
 
         # Populate result message
         result = JointPTP.Result()
         result.success = True
-
         self.get_logger().info(f"Joint Positions At Success: {feedback_msg.joint_present}")
 
         return result
