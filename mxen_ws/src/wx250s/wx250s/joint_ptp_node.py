@@ -92,7 +92,7 @@ class JointPTPNode(Node):
         speed_threshold = [2, 2, 2, 2, 2, 2]
         goal_achieved_array = np.array((False, False, False, False, False, False))
 
-        joint_previous = self.xarm.get_joints()
+        previous_value = self.xarm.get_joints()
 
         feedback_msg = JointPTP.Feedback()
 
@@ -117,7 +117,7 @@ class JointPTPNode(Node):
                 if abs(joint_goal[i] - joint_current) < acceptable_difference[i]:
                     goal_achieved_array[i] = True
                 else: 
-                    if (abs(joint_current - joint_previous[i]) < speed_threshold[i]):
+                    if (abs(joint_current - previous_value[i]) < speed_threshold[i]):
                         goal_handle.abort()
                         result = JointPTP.Result()
                         result.success = False
