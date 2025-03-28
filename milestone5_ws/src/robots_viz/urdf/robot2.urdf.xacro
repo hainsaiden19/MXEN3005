@@ -2,19 +2,19 @@
 <!DOCTYPE xml>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="robot2">
 
-  <xacro:property name="L1" value="0.20" />
-  <xacro:property name="L1radius" value="0.05" />
-  <xacro:property name="L2" value="0.15" />
-  <xacro:property name="L2radius" value="0.03" />
-  <xacro:property name="L3" value="0.08" />
+  <xacro:property name="L1" value="0.18" />
+  <xacro:property name="L1radius" value="0.08" />
+  <xacro:property name="L2" value="0.12" />
+  <xacro:property name="L2radius" value="0.05" />
+  <xacro:property name="L3" value="0.19" />
   <xacro:property name="L3radius" value="0.02" />
   <xacro:property name="eesize" value="0.05" />
-  <xacro:property name="J1MIN" value="${-pi/2}" />
-  <xacro:property name="J1MAX" value="${pi/2}" />
-  <xacro:property name="J2MIN" value="-0.08" />
-  <xacro:property name="J2MAX" value="0.08" />
-  <xacro:property name="J3MIN" value="${-pi}" />
-  <xacro:property name="J3MAX" value="${pi}" />
+  <xacro:property name="J1MIN" value="${-((2*pi)/3)}" />
+  <xacro:property name="J1MAX" value="${(2*pi)/3}" />
+  <xacro:property name="J2MIN" value="${-((2*pi)/9)}" />
+  <xacro:property name="J2MAX" value="${(2*pi)/9}" />
+  <xacro:property name="J3MIN" value="-0.04" />
+  <xacro:property name="J3MAX" value="0.04" />
 
   <material name="blue">
     <color rgba="0.2 0.4 0.65 1" />
@@ -26,11 +26,19 @@
 
   <link name="world" />
 
-  <link name="base" />
+  <link name="base">
+    <visual name="base">
+      <origin xyz="${-(L3+L2)} 0 0" />
+      <geometry>
+        <cylinder radius="0.1" length="0.04" />
+      </geometry>
+      <material name="blue" />
+    </visual>
+  </link>
 
   <link name="link1">
     <visual name="link1">
-      <origin xyz="0 0 ${-L1/2}" />
+      <origin xyz="${-(L3+L2)} 0 0.04" />
       <geometry>
         <cylinder radius="${L1radius}" length="${L1}" />
       </geometry>
@@ -40,9 +48,9 @@
 
   <link name="link2">
     <visual name="link2">
-      <origin xyz="0 0 0" />
+      <origin xyz="${-(L3+L2)} 0 ${L1+0.04}" />
       <geometry>
-        <cylinder radius="${L2radius}" length="${2*L2}" />
+        <cylinder radius="${L2radius}" length="${L2}" />
       </geometry>
       <material name="blue" />
     </visual>
@@ -50,7 +58,7 @@
 
   <link name="link3">
     <visual name="link3">
-      <origin xyz="0 0 ${L3/2}" />
+      <origin xyz="${-(L3)} 0 ${L1+0.04}" />
       <geometry>
         <cylinder radius="${L3radius}" length="${L3}" />
       </geometry>
@@ -60,7 +68,7 @@
 
   <link name="ee">
     <visual name="ee">
-      <origin xyz="0 0 0" />
+      <origin xyz="0 0 ${L1+L2}" />
       <geometry>
         <box size="${eesize} ${eesize} ${eesize}" />
       </geometry>
@@ -71,29 +79,29 @@
   <joint name="base_in_world" type="fixed">
     <parent link="world" />
     <child link="base" />
-    <origin xyz="${-(L2+L3)} 0 0" rpy="0 0 ${pi/2}" />
+    <origin xyz="${-(L3+L2)} 0 0" rpy="0 0 0" />
   </joint>
 
   <joint name="joint1" type="revolute">
     <parent link="base" />
     <child link="link1" />
-    <origin xyz="0 0 ${L1}" rpy="0 0 0" />
+    <origin xyz="0 0 ${L1+0.04}" rpy="0 0 0" />
     <axis xyz="0 0 1" />
     <limit lower="${J1MIN}" upper="${J1MAX}" effort="1" velocity="1" />
   </joint>
 
-  <joint name="joint2" type="prismatic">
+  <joint name="joint2" type="revolute">
     <parent link="link1" />
     <child link="link2" />
-    <origin xyz="0 0 0" rpy="${pi/2} 0 0" />
+    <origin xyz="0 0 0" rpy="0 ${pi/2} 0" />
     <axis xyz="0 0 1" />
     <limit lower="${J2MIN}" upper="${J2MAX}" effort="1" velocity="1" />
   </joint>
 
-  <joint name="joint3" type="revolute">
+  <joint name="joint3" type="prismatic">
     <parent link="link2" />
     <child link="link3" />
-    <origin xyz="0 0 ${L2}" rpy="0 0 0" />
+    <origin xyz="0 0 0" rpy="0 0 0" />
     <axis xyz="0 0 1" />
     <limit lower="${J3MIN}" upper="${J3MAX}" effort="1" velocity="1" />
   </joint>
