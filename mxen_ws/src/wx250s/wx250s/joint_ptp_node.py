@@ -52,11 +52,11 @@ class JointPTPNode(Node):
 
     ### New goal requested ###
     def goal_callback(self, goal_request):
-        self.get_logger().info("## New Goal Requested ##")
+        self.get_logger().info(f"## New Goal Requested ## {goal_request.joint_goal} ")
         
         error_query = self.xarm.is_goal_valid(goal_request.joint_goal)
-
-        if error_query == 0:
+        
+        if (error_query == 0) and (len(goal_request.joint_goal) == 6):
             self.get_logger().info("## Goal is Acceptable ##")  
             return GoalResponse.ACCEPT
         else:
@@ -87,19 +87,20 @@ class JointPTPNode(Node):
     def execute_callback(self, goal_handle):
         self.get_logger().info("## Executing Goal ##")
 
-        joint_goal = goal_handle.request.joint_goal
+        robot_goal = goal_handle.request.joint_goal
         acceptable_difference = [3, 3, 3, 2, 3, 2]
-        speed_threshold = [2, 2, 2, 2, 2, 2]
-        goal_achieved_array = np.array((False, False, False, False, False, False))
-
+        speed_threshold = [0.1, 0.1, 0.1, 0.1, 0.1, 0.1]
         previous_value = self.xarm.get_joints()
 
         feedback_msg = JointPTP.Feedback()
 
-        self.xarm.set_joints(joint_goal)
+        self.xarm.set_joints(robot_goal)
 
         goal_reached = False
         while not goal_reached:
+
+            time.sleep(0.1)
+
             #        goal aborting and cancelling       #
             if not goal_handle.is_active:   
                 self.get_logger().info("Goal aborted")
@@ -113,21 +114,24 @@ class JointPTPNode(Node):
             feedback_msg.joint_present = self.xarm.get_joints()
             current_value = self.xarm.get_joints()
 
-            for i, joint_current in enumerate(current_value):
-                if abs(joint_goal[i] - joint_current) < acceptable_difference[i]:
-                    goal_achieved_array[i] = True
-                else: 
-                    if (abs(joint_current - previous_value[i]) < speed_threshold[i]):
-                        goal_handle.abort()
-                        result = JointPTP.Result()
-                        result.success = False
-                        return result
+            goal_reached_check = [abs(joint_current - joint_goal) < difference for joint_current, joint_goal, difference in zip(current_value, robot_goal, acceptable_difference)]
 
-                if (np.all(goal_achieved_array)):
-                    goal_reached = True
+            if all(goal_reached_check) == True:
+                goal_reached = True
+                #self.get_logger().info(f'current: {current_value}, goal: {robot_goal}')
+                break
+
+            speed_check = [(abs(joint_current - joint_previous) < threshold) and (goal_check == False) for joint_current, joint_previous, threshold, goal_check in zip(current_value, previous_value, speed_threshold, goal_reached_check)]
+
+            if any(speed_check) == True:
+                goal_handle.abort()
+                result = JointPTP.Result()
+                result.success = False
+                return result
+            
+            previous_value = current_value
 
             goal_handle.publish_feedback(feedback_msg)
-            time.sleep(0.1)
 
         with self.goal_lock:
             if not goal_handle.is_active:
