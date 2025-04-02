@@ -1,7 +1,7 @@
 import rclpy
 from rclpy.node import Node
 
-from std_msgs.msg import Float64MultiArray
+from sensor_msgs.msg import JointState
 
 from xarmclient import XArm
 
@@ -10,18 +10,18 @@ class JointStateNode(Node):
         super().__init__("Joint_State_Node")
 
         ### Class Variables ###
-        self.msg = Float64MultiArray()
+        self.msg = JointState()
         self.xarm = XArm()
         #######################
 
         ### Publishing Creation ##
-        self.publisher = self.create_publisher(Float64MultiArray, "/joint_state", 10)
+        self.publisher = self.create_publisher(JointState, "/joint_state", 10)
         timer_period = 0.2
         self.timer = self.create_timer(timer_period, self.timer_callback)
 
     ### Publishing Execution ###
     def timer_callback(self):
-        self.msg.data = self.xarm.get_joints()
+        self.msg.position = self.xarm.get_joints()
         self.publisher.publish(self.msg)
 
 def main(args=None):
