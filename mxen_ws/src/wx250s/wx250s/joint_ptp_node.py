@@ -56,7 +56,7 @@ class JointPTPNode(Node):
         
         error_query = self.xarm.is_goal_valid(goal_request.joint_goal)
         
-        if (error_query == 0) and (len(goal_request.joint_goal) == 6):
+        if (error_query == 0):
             self.get_logger().info("## Goal is Acceptable ##")  
             return GoalResponse.ACCEPT
         else:
