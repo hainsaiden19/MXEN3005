@@ -7,17 +7,17 @@
   <xacro:property name="L1" value="0.04" />
   <xacro:property name="L1radius" value="0.10" />
   <xacro:property name="L2" value="0.25" />
-  <xacro:property name="L2radius" value="0.05" />
+  <xacro:property name="L2radius" value="0.03" />
   <xacro:property name="Lfixed" value="0.10" />
   <xacro:property name="Lfixedradius" value="0.05" />
   <xacro:property name="L3" value="0.17155" />
-  <xacro:property name="L3radius" value="0.05" />
+  <xacro:property name="L3radius" value="0.03" />
   <xacro:property name="L4" value="0.07845" />
-  <xacro:property name="L4radius" value="0.055" />
+  <xacro:property name="L4radius" value="0.04" />
   <xacro:property name="L5" value="0.065" />
-  <xacro:property name="L5radius" value="0.05" />
+  <xacro:property name="L5radius" value="0.03" />
   <xacro:property name="L6" value="0.10915" />
-  <xacro:property name="L6radius" value="0.055" />
+  <xacro:property name="L6radius" value="0.04" />
   <xacro:property name="eesize" value="0.05" />
   <xacro:property name="J1MIN" value="${-pi}" />
   <xacro:property name="J1MAX" value="${pi}" />
@@ -150,7 +150,7 @@
     <parent link="link1" />
     <child link="link2" />
     <origin rpy="0 0 0" xyz="0 0 ${L1}" />
-    <axis xyz="0 1 0" />
+    <axis xyz="0 -1 0" />
     <limit lower="${J2MIN}" upper="${J2MAX}" effort="1" velocity="1" />
   </joint>
 
@@ -164,7 +164,7 @@
     <parent link="linkfixed" />
     <child link="link3" />
     <origin rpy="0 0 0" xyz="0.05 0 0" />
-    <axis xyz="0 1 0" />
+    <axis xyz="0 -1 0" />
     <limit lower="${J3MIN}" upper="${J3MAX}" effort="1" velocity="1" />
   </joint>
 
@@ -180,7 +180,7 @@
     <parent link="link4" />
     <child link="link5" />
     <origin rpy="0 0 0" xyz="${L4} 0 0" />
-    <axis xyz="0 1 0" />
+    <axis xyz="0 -1 0" />
     <limit lower="${J5MIN}" upper="${J5MAX}" effort="1" velocity="1" />
   </joint>
 
