@@ -96,9 +96,16 @@ class CartesianPTPNode(Node):
     def execute_callback(self, goal_handle):
         self.get_logger().info("## Executing Goal ##")
 
-        robot_goal_metres = goal_handle.request.goal_pos
-
         feedback_msg = CartesianPTP.Feedback()
+
+        pose_goal_mm = [i*1000 for i in goal_handle.pose_goal]
+
+        num_increments = int(pose_goal_mm/10)
+        remainder = pose_goal_mm % num_increments
+
+        # get incremental pose goals, then use that to give a set of incremental joint goals
+        # which you then loop throough and simply check if the current pose is equal to the 
+        # goal pose
 
         goal_reached = False
         while not goal_reached:
@@ -118,12 +125,9 @@ class CartesianPTPNode(Node):
             feedback_msg.present_pos = self.xarm.get_joints()
             goal_handle.publish_feedback(feedback_msg)
 
-            robot_goal_centimetres = [i*100 for i in robot_goal_metres]
+            
 
-            num_increments = int(robot_goal_centimetres)
-            remainder = robot_goal_centimetres % num_increments
-
-            incremental_goal = 
+            
 
 
 
