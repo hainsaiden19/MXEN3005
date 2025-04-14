@@ -13,10 +13,12 @@
 
   <depend>wx250s_interface</depend>
   <depend>xarmclient</depend>
+  <depend>wx250s_kinematics</depend>
 
   <depend>std_srvs</depend>
   <depend>std_msgs</depend>
   <depend>sensor_msgs</depend>
+  <depend>geometry_msgs</depend>
   <depend>threading</depend>
   <depend>time</depend> 
   <depend>numpy</depend>
