@@ -97,7 +97,7 @@ class CartesianPTPNode(Node):
         goal_pos_mm = goal_handle.request.goal_pos
 
         # get current htm
-        htm_init, _ = fk(self.xarm.getjoints())
+        htm_init, _ = fk(self.xarm.get_joints())
         rotation = htm_init[0:3, 0:3]
         xyz_init = htm_init[0:3, 3]
         bottomrow = np.array([[0, 0, 0, 1]])
@@ -106,7 +106,7 @@ class CartesianPTPNode(Node):
 
         difference = [abs(g - i) for g, i in zip(goal_pos_mm, initial_pos_mm)]
 
-        num_whole_increments = [int(i/10) for i in difference]
+        num_whole_increments = [i/10 for i in difference]
         num_remainder_increments = [0, 0, 0]
         num_total_increments = [0, 0, 0]
 
@@ -120,7 +120,7 @@ class CartesianPTPNode(Node):
         # goal poulation
         # goals = nX3 matrix, any number of goals, only 3 columns, x y z
         # find largest number of increments
-        n = max(num_total_increments)+1
+        n = int(max(num_total_increments))+1
         goals = np.zeros((n, 3))
 
         for r in range(n):
@@ -141,11 +141,11 @@ class CartesianPTPNode(Node):
             time.sleep(0.1)
             
             goal_htm = np.append(np.append(rotation, np.reshape(xyz, newshape=(3, 1)), axis=1), bottomrow, axis=0)
-            joint_positions = ik(self.xarm.getjoints(), goal_htm)
-            self.xarm.setjoint(joint_positions)
+            joint_positions = ik(self.xarm.get_joints(), goal_htm)
+            self.xarm.set_joints(joint_positions)
 
             goal_reached_check = [abs(c - g)<acceptablegoal_difference for c, g in zip(xyz, xyzgoals)]
-            if all(goal_reached_check):
+            if np.all(goal_reached_check):
                 break
 
             #        goal aborting and cancelling       #
