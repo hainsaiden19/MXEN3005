@@ -107,7 +107,7 @@ class CartesianPTPNode(Node):
         difference = [abs(g - i) for g, i in zip(goal_pos_mm, initial_pos_mm)]
         direction = [int((g - i)/abs(g - i)) for g, i in zip(goal_pos_mm, initial_pos_mm)]
 
-        step_size = 10 # mm
+        step_size = 5 # mm
         num_whole_increments = [int(i/step_size) for i in difference]
         num_remainder_increments = [0, 0, 0]
         num_total_increments = [0, 0, 0]
