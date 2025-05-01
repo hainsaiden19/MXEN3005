@@ -105,12 +105,21 @@ class CartesianPTPNode(Node):
         initial_pos_mm = xyz_init
 
         difference = [abs(g - i) for g, i in zip(goal_pos_mm, initial_pos_mm)]
+        direction = [int((g - i)/abs(g - i)) for g, i in zip(goal_pos_mm, initial_pos_mm)]
 
-        num_whole_increments = [i/10 for i in difference]
+        step_size = 10 # mm
+        num_whole_increments = [int(i/step_size) for i in difference]
         num_remainder_increments = [0, 0, 0]
         num_total_increments = [0, 0, 0]
-
-        remainder = [g%n for g, n in zip(goal_pos_mm, num_whole_increments)]
+        
+        remainder = [0, 0, 0]
+        for i in range(len(remainder)):
+            d = difference[i]
+            n = num_whole_increments[i]
+            if n == 0:
+                remainder[i] = d
+            else:
+                remainder[i] = d%step_size
 
         for i, r in enumerate(remainder):
             if r > 0:
@@ -127,10 +136,15 @@ class CartesianPTPNode(Node):
             if r == 0:
                 goals[r] = initial_pos_mm
             else: 
-                goals[r] = goals[r-1] + 10
+                goals[r] = goals[r-1] + [direction[0]*step_size, direction[1]*step_size, direction[2]*step_size]
                 for c in range(len(goals[r])):
-                    if goals[r][c] > goal_pos_mm[c]:
-                        goals[r][c] = goal_pos_mm[c]
+                    if direction[c] > 0:
+                        if goals[r][c] > goal_pos_mm[c]:
+                            goals[r][c] = goal_pos_mm[c]
+                    else: 
+                        if goals[r][c] < goal_pos_mm[c]:
+                            goals[r][c] = goal_pos_mm[c]
+
         xyzgoals = goals
         
         acceptablegoal_difference = 5 # mm
@@ -144,9 +158,14 @@ class CartesianPTPNode(Node):
             joint_positions = ik(self.xarm.get_joints(), goal_htm)
             self.xarm.set_joints(joint_positions)
 
-            goal_reached_check = [abs(c - g)<acceptablegoal_difference for c, g in zip(xyz, xyzgoals)]
+            goal_reached_check = [abs(c - g)<acceptablegoal_difference for c, g in zip(xyz, goal_pos_mm)]
             if np.all(goal_reached_check):
                 break
+            
+            dist_vector = [abs(c - g) for c, g in zip(xyz, goal_pos_mm)]
+            feedback_msg.distance_to_goal = np.linalg.norm(dist_vector)
+            goal_handle.publish_feedback(feedback_msg)
+
 
             #        goal aborting and cancelling       #
             if not goal_handle.is_active:   
@@ -157,9 +176,7 @@ class CartesianPTPNode(Node):
                 self.get_logger().info("Goal canceled")
                 return CartesianPTP.Result()
             #                                           #
-            feedback_msg.present_pos = self.xarm.get_joints()
-            goal_handle.publish_feedback(feedback_msg)
-
+            
         with self.goal_lock:
             if not goal_handle.is_active:
                 self.get_logger().info("Goal aborted")
@@ -169,7 +186,7 @@ class CartesianPTPNode(Node):
         # Populate result message
         result = CartesianPTP.Result()
         result.success = True
-        self.get_logger().info(f"Joint Positions At Success: {feedback_msg.present_pos}")
+        self.get_logger().info(f"Distance to goal: {feedback_msg.distance_to_goal}")
 
         return result
 
