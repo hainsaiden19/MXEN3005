@@ -1,0 +1,6 @@
+float64 xpick
+float64 ypick
+float64 xplace
+float64 yplace
+---
+bool response

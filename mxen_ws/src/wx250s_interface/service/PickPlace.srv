@@ -1,6 +1,0 @@
-float32 xpick
-float32 ypick
-float32 xplace
-float32 yplace
----
-bool response

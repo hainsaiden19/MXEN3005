@@ -4,7 +4,7 @@ from rclpy.action import ActionClient
 
 
 from wx250s_interface.action import CartesianPTP
-from wx250s_interface.service import PickPlace
+from wx250s_interface.srv import PickPlace
 
 from xarmclient import XArm
 
@@ -26,13 +26,13 @@ class PickAndPlaceNode(Node):
 
     ### Service Execution ###
     def service_callback(self, request, response):
-        xpick = request[0]
-        ypick = request[1]
-        xplace = request[2]
-        yplace = request[3]
-        pick_pos = [xpick, ypick, 10]
+        xpick = request.xpick
+        ypick = request.ypick
+        xplace = request.xplace
+        yplace = request.yplace
+        pick_pos = [xpick, ypick, 20.0]
 
-        self.action_callback()
+        self.action_callback(pick_pos)
         return response
     #######################################################
 

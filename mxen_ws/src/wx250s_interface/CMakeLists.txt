@@ -16,7 +16,7 @@ find_package(rosidl_default_generators REQUIRED)
 set(interface_files
   "action/JointPTP.action"
   "action/CartesianPTP.action"
-  "service/PickPlace.srv"
+  "srv/PickPlace.srv"
 )
 
 rosidl_generate_interfaces(${PROJECT_NAME}
