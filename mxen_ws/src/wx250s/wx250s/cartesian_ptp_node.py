@@ -20,7 +20,6 @@ from xarmclient import XArm
 
 
 class CartesianPTPNode(Node):
-    """Minimal action server that processes one goal at a time."""
 
     def __init__(self):
         super().__init__("cartesian_ptp_node")
@@ -30,11 +29,8 @@ class CartesianPTPNode(Node):
         self.goal_lock = threading.Lock()
 
         self.xarm = XArm()
-
-        self.count = 0.0
         #######################
 
-        # Action servers are created using interface type, action name and multiple callback functions
         self.action_server = ActionServer(
             self,
             CartesianPTP,
@@ -55,22 +51,23 @@ class CartesianPTPNode(Node):
     ### New goal requested ###
     def goal_callback(self, goal_request):
         self.get_logger().info(f"## New Goal Requested ## {goal_request.goal_pos} ")
-        x_query = True; y_query = True; z_query = True
-        if (goal_request.goal_pos[0] < 0.32) and (goal_request.goal_pos[0] > -0.32):
-            x_query = False
-            if (goal_request.goal_pos[1] < 0.32) and (goal_request.goal_pos[1] > -0.32):
-                y_query = False
-                if (goal_request.goal_pos[2] < 0.60) and (goal_request.goal_pos[2] > 0):
-                    z_query = False
+        x_query = False; y_query = False; z_query = False
 
-        if ((not x_query) and (not y_query) and (not z_query)):
+        if (goal_request.goal_pos[0] < 320) and (goal_request.goal_pos[0] > -320):
+            x_query = True
+            if (goal_request.goal_pos[1] < 320) and (goal_request.goal_pos[1] > -320):
+                y_query = True
+                if (goal_request.goal_pos[2] < 600) and (goal_request.goal_pos[2] > 0):
+                    z_query = True
+
+        if ((x_query) and (y_query) and (z_query)):
             self.get_logger().info("## Goal is Acceptable ##")  
             return GoalResponse.ACCEPT
         else:
             self.get_logger().info("## Goal is Unacceptable ##")
-            self.get_logger().info(f"x pos failed: {x_query}")
-            self.get_logger().info(f"y pos failed: {y_query}")
-            self.get_logger().info(f"z pos failed: {z_query}")
+            self.get_logger().info(f"x pos success: {x_query}")
+            self.get_logger().info(f"y pos success: {y_query}")
+            self.get_logger().info(f"z pos success: {z_query}")
             return GoalResponse.REJECT
 
 
@@ -97,20 +94,59 @@ class CartesianPTPNode(Node):
         self.get_logger().info("## Executing Goal ##")
 
         feedback_msg = CartesianPTP.Feedback()
+        goal_pos_mm = goal_handle.request.goal_pos
 
-        pose_goal_mm = [i*1000 for i in goal_handle.pose_goal]
+        # get current htm
+        htm_init, _ = fk(self.xarm.getjoints())
+        rotation = htm_init[0:3, 0:3]
+        xyz_init = htm_init[0:3, 3]
+        bottomrow = np.array([[0, 0, 0, 1]])
 
-        num_increments = int(pose_goal_mm/10)
-        remainder = pose_goal_mm % num_increments
+        initial_pos_mm = xyz_init
 
-        # get incremental pose goals, then use that to give a set of incremental joint goals
-        # which you then loop throough and simply check if the current pose is equal to the 
-        # goal pose
+        difference = [abs(g - i) for g, i in zip(goal_pos_mm, initial_pos_mm)]
 
-        goal_reached = False
-        while not goal_reached:
+        num_whole_increments = [int(i/10) for i in difference]
+        num_remainder_increments = [0, 0, 0]
+        num_total_increments = [0, 0, 0]
 
+        remainder = [g%n for g, n in zip(goal_pos_mm, num_whole_increments)]
+
+        for i, r in enumerate(remainder):
+            if r > 0:
+                num_remainder_increments[i] += 1
+            num_total_increments[i] = num_whole_increments[i] + num_remainder_increments[i]
+
+        # goal poulation
+        # goals = nX3 matrix, any number of goals, only 3 columns, x y z
+        # find largest number of increments
+        n = max(num_total_increments)+1
+        goals = np.zeros((n, 3))
+
+        for r in range(n):
+            if r == 0:
+                goals[r] = initial_pos_mm
+            else: 
+                goals[r] = goals[r-1] + 10
+                for c in range(len(goals[r])):
+                    if goals[r][c] > goal_pos_mm[c]:
+                        goals[r][c] = goal_pos_mm[c]
+        xyzgoals = goals
+        
+        acceptablegoal_difference = 5 # mm
+        
+        # iterate through the htms, keeping the rotation matrix constant and the xyz changing
+        # skipping the first row, since thats just where we are right now
+        for xyz in xyzgoals[1:]:
             time.sleep(0.1)
+            
+            goal_htm = np.append(np.append(rotation, np.reshape(xyz, newshape=(3, 1)), axis=1), bottomrow, axis=0)
+            joint_positions = ik(self.xarm.getjoints(), goal_htm)
+            self.xarm.setjoint(joint_positions)
+
+            goal_reached_check = [abs(c - g)<acceptablegoal_difference for c, g in zip(xyz, xyzgoals)]
+            if all(goal_reached_check):
+                break
 
             #        goal aborting and cancelling       #
             if not goal_handle.is_active:   
@@ -121,17 +157,8 @@ class CartesianPTPNode(Node):
                 self.get_logger().info("Goal canceled")
                 return CartesianPTP.Result()
             #                                           #
-        
             feedback_msg.present_pos = self.xarm.get_joints()
             goal_handle.publish_feedback(feedback_msg)
-
-            
-
-            
-
-
-
-            
 
         with self.goal_lock:
             if not goal_handle.is_active:
