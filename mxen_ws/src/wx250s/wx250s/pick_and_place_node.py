@@ -26,7 +26,7 @@ class PickAndPlaceNode(Node):
         #####################################################################################
 
         ### Action Client ###
-        self.action_client = ActionClient(self, CartesianPTP, 'set_cartesian_ptp')
+        #self.action_client = ActionClient(self, CartesianPTP, 'set_cartesian_ptp')
         ############################################################################
 
     ### Service Execution ###
@@ -39,29 +39,33 @@ class PickAndPlaceNode(Node):
 
         self.xarm.home()
 
-        time.sleep(2)
+        time.sleep(3)
 
-        self.moveup()
+        mov1 = [300.0, 0.0, 400.0]
+        mov2 = [xpick, ypick, 100.0]
+
+        self.move(mov1)
+        time.sleep(2)
+        
+        self.move(mov2)
 
         #self.action_callback(pick_pos)
         return response
     #######################################################
 
 
-    def moveup(self):
-        upgoal = [300.0, 0.0, 400.0]
-        joint_goals = self.get_jointgoals(upgoal)
+    def move(self, xyzgoal):
+        joint_goals = self.get_jointgoals(xyzgoal)
         self.get_logger().info(f'joint goals: {joint_goals} \n\n') 
-
-        #if joint_goals is not None:
-        #    self.get_logger().info(joint_goals) 
-        #    for joint in joint_goals:
-        #        #self.xarm.set_joints(joint_goals[np.shape(joint_goals)[0]-1])
-        #        self.xarm.set_joints(joint)
-
-        #else:
-         #   self.get_logger().info(f'error') 
-
+        final_pos = joint_goals[np.shape(joint_goals)[0]-1]
+        self.xarm.set_joints(final_pos)
+        # wait until at desired position
+        #accept_dif = [3, 3, 3, 3, 3, 3]
+        #goalreached = False
+        #while not goalreached:
+            #currentpos = self.xarm.get_joints()
+            #if all([abs(g - c)<ad for g, c, ad in zip(list(final_pos), currentpos, accept_dif)]):
+                #goalreached = True
         return 0
 
 
@@ -78,7 +82,7 @@ class PickAndPlaceNode(Node):
         difference = [abs(g - i) for g, i in zip(goal_pos_mm, initial_pos_mm)]
         direction = [int((g - i)/abs(g - i)) for g, i in zip(goal_pos_mm, initial_pos_mm)]
 
-        step_size = 5 # mm
+        step_size = 1 # mm
         num_whole_increments = [int(i/step_size) for i in difference]
         num_remainder_increments = [0, 0, 0]
         num_total_increments = [0, 0, 0]
