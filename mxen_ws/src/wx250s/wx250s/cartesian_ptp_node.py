@@ -60,41 +60,7 @@ class CartesianPTPNode(Node):
                 if (goal_request.goal_pos[2] < 600) and (goal_request.goal_pos[2] > 0):
                     z_query = True
 
-        if ((x_query) and (y_query) and (z_query)):
-            self.get_logger().info("## Goal is Acceptable ##")  
-            return GoalResponse.ACCEPT
-        else:
-            self.get_logger().info("## Goal is Unacceptable ##")
-            self.get_logger().info(f"x pos success: {x_query}")
-            self.get_logger().info(f"y pos success: {y_query}")
-            self.get_logger().info(f"z pos success: {z_query}")
-            return GoalResponse.REJECT
-
-
-    # This function is called whenever new goal has been accepted
-    def handle_accepted_callback(self, goal_handle):
-        with self.goal_lock:
-            # This server only allows one goal at a time
-            if self.goal_handle is not None and self.goal_handle.is_active:
-                self.get_logger().info("Aborting previous goal")
-                # Abort the existing goal
-                self.goal_handle.abort()
-            self.goal_handle = goal_handle
-
-        goal_handle.execute()
-
-    # This function is called whenever cancel request is received
-    def cancel_callback(self, goal):
-        # Accept or reject a client request to cancel an action
-        self.get_logger().info("Received cancel request")
-        return CancelResponse.ACCEPT
-
-    # This function is called at the start of action execution
-    def execute_callback(self, goal_handle):
-        self.get_logger().info("## Executing Goal ##")
-
-        feedback_msg = CartesianPTP.Feedback()
-        goal_pos_mm = goal_handle.request.goal_pos
+        goal_pos_mm = goal_request.goal_pos
 
         # get current htm
         htm_init, _ = fk(self.xarm.get_joints())
@@ -146,25 +112,78 @@ class CartesianPTPNode(Node):
                             goals[r][c] = goal_pos_mm[c]
 
         xyzgoals = goals
+
+        self.joint_goals = np.zeros((n, 6))
+        self.joint_goals[0] = self.xarm.get_joints()
+        error_query = 0
+        for i, xyz in enumerate(xyzgoals):
+            if i > 0:
+                self.get_logger().info(f'goal joints {np.shape(self.joint_goals)}') 
+
+                htm_current = np.append(np.append(rotation, np.reshape(xyz, newshape=(3, 1)), axis=1), bottomrow, axis=0)
+                self.joint_goals[i] = ik(self.joint_goals[i-1], htm_current)
+                if self.joint_goals[i] is None:
+                    self.get_logger().info(f'didnt converge') 
+                    return GoalResponse.REJECT
+
+                error_query += self.xarm.is_goal_valid(self.joint_goals[i])
+                #self.get_logger().info(f"error: {self.xarm.ERRORS[self.xarm.is_goal_valid(self.joint_goals[i])]}")
+
+        if ((x_query) and (y_query) and (z_query) and (error_query == 0)):
+            self.get_logger().info("## Goal is Acceptable ##")  
+            return GoalResponse.ACCEPT
+        else:
+            self.get_logger().info("## Goal is Unacceptable ##")
+            self.get_logger().info(f"x pos success: {x_query}")
+            self.get_logger().info(f"y pos success: {y_query}")
+            self.get_logger().info(f"z pos success: {z_query}")
+            self.get_logger().info(f"errors: {error_query}")
+            return GoalResponse.REJECT
+
+
+    # This function is called whenever new goal has been accepted
+    def handle_accepted_callback(self, goal_handle):
+        with self.goal_lock:
+            # This server only allows one goal at a time
+            if self.goal_handle is not None and self.goal_handle.is_active:
+                self.get_logger().info("Aborting previous goal")
+                # Abort the existing goal
+                self.goal_handle.abort()
+            self.goal_handle = goal_handle
+
+        goal_handle.execute()
+
+    # This function is called whenever cancel request is received
+    def cancel_callback(self, goal):
+        # Accept or reject a client request to cancel an action
+        self.get_logger().info("Received cancel request")
+        return CancelResponse.ACCEPT
+
+    # This function is called at the start of action execution
+    def execute_callback(self, goal_handle):
+        self.get_logger().info("## Executing Goal ##")
+
+        feedback_msg = CartesianPTP.Feedback()
+        #goal_pos_mm = goal_handle.request.goal_pos
         
-        acceptablegoal_difference = 5 # mm
+        #acceptablegoal_difference = 5 # mm
+
+        #final_xyz = xyzgoals[n]
+        #goal_htm = np.append(np.append(rotation, np.reshape(final_xyz, newshape=(3, 1)), axis=1), bottomrow, axis=0)
         
         # iterate through the htms, keeping the rotation matrix constant and the xyz changing
         # skipping the first row, since thats just where we are right now
-        for xyz in xyzgoals[1:]:
+        for joint_position in self.joint_goals:
             time.sleep(0.1)
-            
-            goal_htm = np.append(np.append(rotation, np.reshape(xyz, newshape=(3, 1)), axis=1), bottomrow, axis=0)
-            joint_positions = ik(self.xarm.get_joints(), goal_htm)
-            self.xarm.set_joints(joint_positions)
+            self.xarm.set_joints(joint_position)
 
-            goal_reached_check = [abs(c - g)<acceptablegoal_difference for c, g in zip(xyz, goal_pos_mm)]
-            if np.all(goal_reached_check):
-                break
+            #goal_reached_check = [abs(c - g)<acceptablegoal_difference for c, g in zip(xyz, goal_pos_mm)]
+            #if np.all(goal_reached_check):
+                #break
             
-            dist_vector = [abs(c - g) for c, g in zip(xyz, goal_pos_mm)]
-            feedback_msg.distance_to_goal = np.linalg.norm(dist_vector)
-            goal_handle.publish_feedback(feedback_msg)
+            #dist_vector = [abs(c - g) for c, g in zip(xyz, goal_pos_mm)]
+            #feedback_msg.distance_to_goal = np.linalg.norm(dist_vector)
+            #goal_handle.publish_feedback(feedback_msg)
 
 
             #        goal aborting and cancelling       #

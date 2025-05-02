@@ -19,7 +19,7 @@ class JointStateNode(Node):
 
         ### Publishing Creation ##
         self.publisher = self.create_publisher(JointState, "/joint_state", 10)
-        timer_period = 0.05
+        timer_period = 2
         self.timer = self.create_timer(timer_period, self.timer_callback)
 
     ### Publishing Execution ###
