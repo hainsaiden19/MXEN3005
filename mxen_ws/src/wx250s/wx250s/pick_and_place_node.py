@@ -41,6 +41,14 @@ class PickAndPlaceNode(Node):
 
         #time.sleep(3)
 
+        # moves:
+        # 1. go up [go from current position and orientation to the origin position with origin orientation]
+        # 2. rotate to the picking position with flat orientation, dont turn downwards
+        # 3. go down to the object and close gripper
+        # 4. go back up to position 2 with downturned orientation
+        # 5. rotate to placing position with downturned orientation
+        # 6. go down to place with downturned orientation and release
+
         movorigin = [200, 0.0, 300.0]
         mov2 = [xpick, ypick, 300.0]
         mov3 = [xpick, ypick, 10.0]
@@ -48,46 +56,55 @@ class PickAndPlaceNode(Node):
         mov5 = [xplace, yplace, 300.0]
         mov6 = [xplace, yplace, 10.0]
 
-
-        self.move(movorigin, fr=True)
-        
-        self.move(mov2, fr=False)
-
-        self.move(mov3, fr=False)
-
-        self.xarm.grip(1)
-
-        self.move(mov4, fr=True)
-
-        self.move(mov5, fr=False)
-
-        self.move(mov6, fr=False)
-
         self.xarm.grip(0)
-        
 
-        #self.action_callback(pick_pos)
+        self.move(movorigin, fr=True, ry=0)
+        
+        self.move(mov2, fr=False, ry=60)
+
+        self.move(mov3, fr=False, ry=60)
+
+        self.grab()
+
+        self.move(mov4, fr=True, ry=0)
+
+        self.move(mov5, fr=False, ry=60)
+
+        self.move(mov6, fr=False, ry=60)
+
+        self.release()
+        
         return response
     #######################################################
 
+    def grab(self):
+        self.xarm.grip(1)
+        time.sleep(1)
+        return 0
+    
+    def release(self):
+        self.xarm.grip(0)
+        time.sleep(1)
+        return 0
 
-    def move(self, xyzgoal, fr):
+    def move(self, xyzgoal, fr, ry):
 
-        joint_goals = self.get_jointgoals(xyzgoal, step_size=5, fixedrotation=fr)
+        joint_goals = self.get_jointgoals(xyzgoal, step_size=5, fixedrotation=fr, rotation_y=ry)
 
-        self.get_logger().info(f'joint goals: {joint_goals} \n\n') 
+        #self.get_logger().info(f'joint goals: {joint_goals} \n\n') 
 
         final_pos = joint_goals[np.shape(joint_goals)[0]-1]
 
         self.xarm.set_joints(final_pos)
 
         #wait until at desired position
-        accept_dif = [3, 3, 3, 3, 3, 3]
+        accept_dif = [6, 6, 6, 6, 6, 6]
         goalreached = False
         while not goalreached:
             currentpos = self.xarm.get_joints()
             if all([abs(g - c)<ad for g, c, ad in zip(list(final_pos), currentpos, accept_dif)]):
                 goalreached = True
+                self.get_logger().info(f'\n\nReached Goal\n\n')
         return 0
     
 
@@ -115,7 +132,7 @@ class PickAndPlaceNode(Node):
         return max(num_total_increments)
     
 
-    def get_jointgoals(self, xyzgoal, step_size, fixedrotation):
+    def get_jointgoals(self, xyzgoal, step_size, fixedrotation, rotation_y):
         goal_pos_mm = xyzgoal
 
         htm_init, _ = fk(self.xarm.get_joints())  
@@ -126,7 +143,7 @@ class PickAndPlaceNode(Node):
 
         bottomrow = np.array([[0, 0, 0, 1]])
 
-        self.get_logger().info(f'htm: {htm_init} \n\n') 
+        #self.get_logger().info(f'htm: {htm_init} \n\n') 
 
         direction = [int((g - i)/abs(g - i)) for g, i in zip(goal_pos_mm, initial_pos_mm)]
 
@@ -146,7 +163,7 @@ class PickAndPlaceNode(Node):
         asquat = spst.Rotation.from_matrix(rotation_init).as_quat()
         euler_init = spst.Rotation.from_quat(asquat).as_euler('xyz', degrees=True)
         euler_init = np.array([0, 0, 0])
-        euler_final = np.array([0, 60, rz])
+        euler_final = np.array([0, rotation_y, rz])
         eulerstep = (euler_final - euler_init)/num_total_increments
 
         for r in range(n):
