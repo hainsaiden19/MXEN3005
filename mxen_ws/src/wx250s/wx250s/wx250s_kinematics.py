@@ -30,33 +30,6 @@ def ik(thetas, goal_htm):
         print("IK did not converge within 20 iterations")
         return None
     
-# Inverse kinematics: input and ouput joints in degrees, input goal HTM in mm
-def ik_clamped(thetas, goal_htm):
-    # Joint angles
-    thetas = list(thetas)
-
-    # Newton params
-    max_iters = 20
-    step = 0.8
-
-    converged = False
-    for _ in range(max_iters):
-        Fee, Jee = fk(thetas)
-        residual = np.reshape(goal_htm - Fee, 16)
-        htm_norm = np.sum(residual**2)
-        if htm_norm < 1e-3:
-            converged = True
-            break
-
-        dthetas = np.linalg.pinv(Jee) @ residual
-        thetas += step * (180.0 / np.pi) * dthetas
-
-    if converged:
-        return thetas
-    else:
-        print("IK did not converge within 20 iterations")
-        return None
-
 
 # Forward kinematics and its Jacobian; input joints in degrees, output HTM in mm
 def fk(thetas):

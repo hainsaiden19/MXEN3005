@@ -22,7 +22,7 @@ class PoseNode(Node):
 
         ### Publishing Creation ##
         self.publisher = self.create_publisher(PoseStamped, "/pose", 10)
-        timer_period = 1
+        timer_period = 0.5
         self.timer = self.create_timer(timer_period, self.timer_callback)
 
     ### Publishing Execution ###
@@ -38,12 +38,19 @@ class PoseNode(Node):
         transform_rot = Quaternion()
         transform_rot = transform[0:3, 0:3]
         quart_rot = spst.Rotation.from_matrix(transform_rot).as_quat()
+
+        euler = spst.Rotation.from_quat(quart_rot).as_euler(degrees=True, seq='xyz')
+
+        
+        #self.get_logger().info(spst.Rotation.as_euler(quart_rot, degrees=True))
         self.msg.pose.orientation.x, self.msg.pose.orientation.y, self.msg.pose.orientation.z, self.msg.pose.orientation.w = quart_rot
         
         self.msg.header.frame_id = "base_link"
 
-        #self.get_logger().info(f'\n\nlhs: {self.msg.pose.orientation}' )
-        #self.get_logger().info(f'\n\nrhs: {self.msg.pose.position}' )
+        #self.get_logger().info(f'\n\neuler angles: {euler}')
+        #self.get_logger().info(f'\nRotation from matrix: {self.msg.pose.orientation}' )
+        #self.get_logger().info(f'\nRotation using euler angles: {spst.Rotation.from_euler('xyz', euler, degrees=True).as_quat()}')
+        #self.get_logger().info(f'\n\nPosition: {self.msg.pose.position}' )
 
         self.publisher.publish(self.msg)
 
