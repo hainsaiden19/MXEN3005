@@ -41,34 +41,29 @@ class PickAndPlaceNode(Node):
 
         #time.sleep(3)
 
-        mov1 = [100.0, 0.0, 200.0]
-        mov2 = [xpick, ypick, 200.0]
+        movorigin = [200, 0.0, 300.0]
+        mov2 = [xpick, ypick, 300.0]
         mov3 = [xpick, ypick, 10.0]
-        mov4 = [xpick, ypick, 200.0]
-        mov5 = [xplace, yplace, 200.0]
+        mov4 = [xpick, ypick, 300.0]
+        mov5 = [xplace, yplace, 300.0]
         mov6 = [xplace, yplace, 10.0]
 
-        self.move(mov1, fr=False)
 
-        time.sleep(2)
+        self.move(movorigin, fr=True)
         
         self.move(mov2, fr=False)
 
-        time.sleep(2)
-
         self.move(mov3, fr=False)
 
-        time.sleep(2)
+        self.xarm.grip(1)
 
-        self.move(mov4, fr=False)
-
-        time.sleep(2)
+        self.move(mov4, fr=True)
 
         self.move(mov5, fr=False)
 
-        time.sleep(2)
-
         self.move(mov6, fr=False)
+
+        self.xarm.grip(0)
         
 
         #self.action_callback(pick_pos)
@@ -86,13 +81,13 @@ class PickAndPlaceNode(Node):
 
         self.xarm.set_joints(final_pos)
 
-        # wait until at desired position
-        #accept_dif = [3, 3, 3, 3, 3, 3]
-        #goalreached = False
-        #while not goalreached:
-            #currentpos = self.xarm.get_joints()
-            #if all([abs(g - c)<ad for g, c, ad in zip(list(final_pos), currentpos, accept_dif)]):
-                #goalreached = True
+        #wait until at desired position
+        accept_dif = [3, 3, 3, 3, 3, 3]
+        goalreached = False
+        while not goalreached:
+            currentpos = self.xarm.get_joints()
+            if all([abs(g - c)<ad for g, c, ad in zip(list(final_pos), currentpos, accept_dif)]):
+                goalreached = True
         return 0
     
 
@@ -148,8 +143,10 @@ class PickAndPlaceNode(Node):
         x = xyzgoal[0]; y = xyzgoal[1]
         rz = np.rad2deg(np.arctan2(y, x))
 
+        asquat = spst.Rotation.from_matrix(rotation_init).as_quat()
+        euler_init = spst.Rotation.from_quat(asquat).as_euler('xyz', degrees=True)
         euler_init = np.array([0, 0, 0])
-        euler_final = np.array([0, 45, rz])
+        euler_final = np.array([0, 60, rz])
         eulerstep = (euler_final - euler_init)/num_total_increments
 
         for r in range(n):
