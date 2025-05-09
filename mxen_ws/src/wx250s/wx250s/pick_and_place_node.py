@@ -43,18 +43,25 @@ class PickAndPlaceNode(Node):
         return 0
 
 
-    def move(self, xyzgoal, fr, ry):
+    def move(self, xyzgoal, fr, ry, rx):
 
-        joint_goals = self.get_jointgoals(xyzgoal, step_size=1, fixedrotation=fr, rotation_y=ry)
+        joint_goals = self.get_jointgoals(xyzgoal, step_size=5, fixedrotation=fr, rotation_y=ry, rotation_x=rx)
 
         #self.get_logger().info(f'joint goals: {joint_goals} \n\n') 
 
         final_pos = joint_goals[np.shape(joint_goals)[0]-1]
 
-        self.xarm.set_joints(final_pos)
+        self.get_logger().info(f"\n\n### Joint goals: {final_pos}")
+
+        error_query = self.xarm.is_goal_valid(final_pos)
+
+        if error_query == 0:
+            self.get_logger().info(f'Errors: {error_query}')
+
+            self.xarm.set_joints(final_pos, motion_mode="low_acc")
 
         #wait until at desired position
-        accept_dif = [6, 6, 6, 6, 6, 6]
+        accept_dif = [7, 7, 7, 7, 7, 7]
         goalreached = False
         while not goalreached:
             currentpos = self.xarm.get_joints()
@@ -88,7 +95,7 @@ class PickAndPlaceNode(Node):
         return max(num_total_increments)
     
 
-    def get_jointgoals(self, xyzgoal, step_size, fixedrotation, rotation_y):
+    def get_jointgoals(self, xyzgoal, step_size, fixedrotation, rotation_y, rotation_x):
         goal_pos_mm = xyzgoal
 
         htm_init, _ = fk(self.xarm.get_joints())  
@@ -117,7 +124,7 @@ class PickAndPlaceNode(Node):
         asquat = spst.Rotation.from_matrix(rotation_init).as_quat()
         euler_init = spst.Rotation.from_quat(asquat).as_euler('xyz', degrees=True)
         eulergoals[0] = euler_init
-        euler_final = np.array([0, rotation_y, rz])
+        euler_final = np.array([rotation_x, rotation_y, rz])
         eulerstep = (euler_final - euler_init)/num_total_increments
 
         for r in range(n):
@@ -282,40 +289,42 @@ class PickAndPlaceNode(Node):
         # 5. rotate to placing position with downturned orientation
         # 6. go down to place with downturned orientation and release
 
+        self.get_logger().info("\n\n### Pick and Place Initiated ###\n")
+
         goalsvalid = self.goalchecker(xpick, ypick, xplace, yplace)
 
         if goalsvalid:
 
-            movorigin = [200, 0.0, 300.0]
+            movorigin = [350, 0.0, 400.0]
             f = 1.1
             mov2 = [xpick*f, ypick*f, 300.0]
-            mov3 = [xpick, ypick, 10.0]
+            mov3 = [xpick, ypick, 15.0]
             mov4 = [xpick*f, ypick*f, 300.0]
             mov5 = [xplace*f, yplace*f, 300.0]
-            mov6 = [xplace, yplace, 10.0]
+            mov6 = [xplace, yplace, 15.0]
             mov7 = [xplace*f, yplace*f, 300.0]
 
             self.release()
 
-            self.move(movorigin, fr=False, ry=0)
+            self.move(movorigin, fr=False, ry=0, rx=0)
                 
-            self.move(mov2, fr=False, ry=30)
+            self.move(mov2, fr=False, ry=60, rx=90)
 
-            self.move(mov3, fr=False, ry=60)
+            self.move(mov3, fr=False, ry=90, rx=90)
 
             self.grab()
 
-            self.move(mov4, fr=True, ry=0)
+            self.move(mov4, fr=False, ry=60, rx=90)
 
-            self.move(mov5, fr=False, ry=30)
+            self.move(mov5, fr=False, ry=60, rx=90)
 
-            self.move(mov6, fr=False, ry=60)
+            self.move(mov6, fr=False, ry=90, rx=0)
 
             self.release()
 
-            self.move(mov7, fr=True, ry=0)
+            self.move(mov7, fr=False, ry=60, rx=0)
 
-            self.move(movorigin, fr=False, ry=0)
+            self.move(movorigin, fr=False, ry=0, rx=0)
 
             self.get_logger().info(f"\n\n### Pick and Place Executed Succesfully ###\n\n")
 
