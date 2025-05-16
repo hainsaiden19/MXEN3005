@@ -28,6 +28,7 @@ setup(
         'console_scripts': [
             'pick_and_place_node = wx250s_teleop.pick_and_place_node:main',
             'homing_node = wx250s_teleop.homing_node:main',
+            'joystick_node = wx250s_teleop.joystick_node:main',
         ],
     },
 )
