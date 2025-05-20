@@ -327,11 +327,18 @@ class PickAndPlaceNode(Node):
 
         self.get_logger().info("\n\n### Pick and Place Initiated ###\n")
 
+
+        xpick = 200
+        ypick = 200
+        xplace = 200
+        yplace = 200
         goalsvalid = self.goalchecker(xpick, ypick, xplace, yplace)
 
         if goalsvalid:
 
-            self.movePillar(xpick, ypick, xplace, yplace, zplace=55.0)
+            self.movePillar(190, -190, 275, 225, zplace=55.0)
+
+            self.movePillar(260, -194, 175, 320, zplace=55.0)
 
             response.response = True
 

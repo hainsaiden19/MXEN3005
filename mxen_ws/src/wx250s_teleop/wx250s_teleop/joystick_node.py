@@ -22,12 +22,13 @@ class JoystickNode(Node):
         self.joystickvalues = Joy()
         self.dead = 0
         self.i = 0
-        #######################
+
         self.xarm.home()
         time.sleep(2)
         self.currentpos = np.array(self.xarm.get_joints())
+        #######################
+        
         ### Subscription ###
-        ### Publishing Creation ##
         self.subscription = self.create_subscription(Joy, "/joy", self.listener_callback, 10)
 
     
