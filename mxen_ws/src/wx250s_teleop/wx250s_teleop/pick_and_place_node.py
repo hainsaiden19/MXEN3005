@@ -344,11 +344,11 @@ class PickAndPlaceNode(Node):
 
         self.release() 
 
-        self.move(mov7, fr=False, ry=10, rx=90, rz=moving) 
+        self.move(mov7, fr=False, ry=15, rx=90, rz=moving) 
 
         self.move(mov8, fr=False, ry=30, rx=0, rz=moving) 
 
-        self.move(movorigin, fr=False, ry=0, rx=0, rz=moving) 
+        #self.move(movorigin, fr=False, ry=0, rx=0, rz=moving) 
 
         self.get_logger().info(f"\n\n### Pick and Place Executed Succesfully ###\n\n")
 
@@ -378,23 +378,23 @@ class PickAndPlaceNode(Node):
         goalsvalid = True
         if goalsvalid:
 
-            #self.movePillar(190, -190, 275, 225, 55.0)
+            ### level 1 ##################################
+            self.movePillar(190, -190, 275, 225, 55.0)
+            self.movePillar(260, -194, 175, 320, 55.0)
+            self.movePlatform(180, -325, 235, 285, 70.0)
+            ##############################################
 
-            #self.movePillar(260, -194, 175, 320, 55.0)
+            ### level 2 ##################################
+            self.movePillar(190, -80, 275, 225, 125.0)
+            self.movePillar(260, -80, 175, 320, 125.0)
+            self.movePlatform(0, -285, 235, 285, 140.0)
+            ##############################################
 
-            self.movePlatform(180, -325, 235, 285, 80.0)
-
-            #self.movePillar()
-#
-            #self.movePillar()
-#
-            #self.movePlatform()
-#
-            #self.movePillar()
-#
-            #self.movePillar()
-#
-            #self.movePlatform()
+            ### level 3 ##################################
+            self.movePillar(190, 20, 375, 225, 195.0)
+            self.movePillar(260, 20, 175, 320, 195.0)
+            self.movePlatform(160, -265, 235, 285, 300.0)
+            ##############################################
 
             response.success = True
 
