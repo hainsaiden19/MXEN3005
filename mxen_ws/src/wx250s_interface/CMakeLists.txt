@@ -17,6 +17,7 @@ set(interface_files
   "action/JointPTP.action"
   "action/CartesianPTP.action"
   "srv/PickPlace.srv"
+  "action/ShrineBuild.action"
 )
 
 rosidl_generate_interfaces(${PROJECT_NAME}

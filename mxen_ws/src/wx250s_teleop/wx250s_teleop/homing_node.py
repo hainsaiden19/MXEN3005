@@ -29,6 +29,7 @@ class HomingNode(Node):
         if self.homing: 
             self.xarm.grip(0)
             self.xarm.home()
+            response.success = True
         return response
     #########################
 
