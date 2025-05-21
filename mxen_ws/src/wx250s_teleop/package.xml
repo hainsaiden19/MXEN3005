@@ -26,6 +26,9 @@
   <depend>joy_linux</depend>
   <depend>joy</depend>
 
+  <depend>uuid</depend>
+  <depend>unique_identifier_msgs</depend>
+
   <test_depend>ament_copyright</test_depend>
   <test_depend>ament_flake8</test_depend>
   <test_depend>ament_pep257</test_depend>

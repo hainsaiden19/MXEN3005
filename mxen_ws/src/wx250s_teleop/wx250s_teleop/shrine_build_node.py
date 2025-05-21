@@ -27,6 +27,8 @@ class ShrineBuildNode(Node):
         self.goal_handle = None
         self.goal_lock = threading.Lock()
 
+        self.goal_abort = False
+
         self.xarm = XArm()
         #######################
 
@@ -62,74 +64,92 @@ class ShrineBuildNode(Node):
                 # Abort the existing goal
                 self.goal_handle.abort()
             self.goal_handle = goal_handle
+
         goal_handle.execute()
+        self.goal_abort = False
 
 
     # This function is called whenever cancel request is received
     def cancel_callback(self, goal):
         # Accept or reject a client request to cancel an action
         self.get_logger().info("Received cancel request")
+        self.goal_abort = True
+        self.xarm.home()
+        time.sleep(3)
+        self.xarm.grip(0)
         return CancelResponse.ACCEPT
     
 
     def grab(self):
-        self.xarm.grip(1)
-        time.sleep(1)
+        if self.goal_abort == False:
+            self.xarm.grip(1)
+            time.sleep(1)
         return 0
     
 
     def release(self):
-        time.sleep(1)
-        self.xarm.grip(0)
-        time.sleep(1)
+        if self.goal_abort == False:
+            time.sleep(1)
+            self.xarm.grip(0)
+            time.sleep(1)
         return 0
 
 
     def move(self, xyzgoal, fr, ry, rx, rz):
 
-        step_size=5
+        if self.goal_abort == True:
+            result = ShrineBuild.Result()
+            result.success = True
+            #self.xarm.set_joints(self.xarm.get_joints(), motion_mode="low_acc")
+            #self.xarm.home()
+            #time.sleep(2)
+            #self.xarm.grip(0)
+            return result
 
-        joint_goals = self.get_jointgoals(xyzgoal, step_size, fixedrotation=fr, rotation_y=ry, rotation_x=rx, rotation_z=rz)
+        else:
+            step_size=5
 
-        final_pos = joint_goals[np.shape(joint_goals)[0]-1]
+            joint_goals = self.get_jointgoals(xyzgoal, step_size, fixedrotation=fr, rotation_y=ry, rotation_x=rx, rotation_z=rz)
 
-        error_query = self.xarm.is_goal_valid(final_pos)
+            final_pos = joint_goals[np.shape(joint_goals)[0]-1]
 
-        if error_query == 0:
+            error_query = self.xarm.is_goal_valid(final_pos)
 
-            self.xarm.set_joints(final_pos, motion_mode="low_acc")
-            time.sleep(0.05)
-            self.xarm.set_joints(final_pos, motion_mode="low_acc")
+            if (error_query == 0) and (not self.goal_abort):
+                self.xarm.set_joints(final_pos, motion_mode="low_acc")
+                time.sleep(0.05)
+                self.xarm.set_joints(final_pos, motion_mode="low_acc")
 
-        if error_query != 0:
-            self.get_logger().info(f'### Error ###')
-            self.get_logger().info(f'Errors: {error_query}')
-            #self.get_logger().info(f'Errors: {self.xarm.ERRORS(error_query)}')
 
-        #wait until at desired position
-        goalreached = False
-        upper_limit = 150
-        i = 0
-        while (not goalreached) and (i < upper_limit):
+            if (error_query != 0):
+                self.get_logger().info(f'### Error ###')
+                self.get_logger().info(f'Errors: {error_query}')
+                #self.get_logger().info(f'Errors: {self.xarm.ERRORS(error_query)}')
 
-            htm_current, _ = fk(self.xarm.get_joints())
+            #wait until at desired position
+            goalreached = False
+            upper_limit = 150
+            i = 0
+            while (not goalreached) and (i < upper_limit) and (not self.goal_abort):
 
-            currentpos = htm_current[0:3, 3]
+                htm_current, _ = fk(self.xarm.get_joints())
 
-            htm_final, _ = fk(final_pos)
+                currentpos = htm_current[0:3, 3]
 
-            goalpos = htm_final[0:3, 3]
+                htm_final, _ = fk(final_pos)
 
-            xyzdif = [20, 20, 10]
+                goalpos = htm_final[0:3, 3]
 
-            goalreachedcheck = [abs(g - c) < d for c, g, d in zip(currentpos, goalpos, xyzdif)]
-            dif = [abs(g - c) for c, g in zip(currentpos, goalpos)]
+                xyzdif = [20, 20, 10]
 
-            if all(goalreachedcheck):
-                goalreached = True
-                self.get_logger().info(f'\n\nReached Position\n')
-            
-            i += 1
+                goalreachedcheck = [abs(g - c) < d for c, g, d in zip(currentpos, goalpos, xyzdif)]
+                dif = [abs(g - c) for c, g in zip(currentpos, goalpos)]
+
+                if all(goalreachedcheck):
+                    goalreached = True
+                    self.get_logger().info(f'\n\nReached Position\n')
+
+                i += 1
            
 
         return 0
@@ -297,7 +317,7 @@ class ShrineBuildNode(Node):
         self.release()
 
         self.move(movorigin, fr=False, ry=0, rx=0, rz=moving)
-            
+
         self.move(mov2, fr=False, ry=30, rx=0, rz=moving)
 
         self.move(mov3, fr=False, ry=ryplace, rx=0, rz=moving)
@@ -305,7 +325,7 @@ class ShrineBuildNode(Node):
         self.grab()
 
         self.move(mov4, fr=False, ry=30, rx=0, rz=moving)
-        
+
         self.move(mov5, fr=False, ry=30, rx=0, rz=moving)
 
         self.move(mov6, fr=False, ry=ryplace, rx=0, rz=moving) 
@@ -404,7 +424,7 @@ class ShrineBuildNode(Node):
         self.movePlatform(160, -265, 235, 285, 300.0, 80.0, 70.0, 450.0, 0.0)
         ##############################################
 
-        #goal_handle.abort()
+        self.get_logger().info("## Shrine Built ##")
 
 
         #        goal aborting and cancelling       #

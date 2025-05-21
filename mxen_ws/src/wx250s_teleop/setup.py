@@ -30,6 +30,7 @@ setup(
             'homing_node = wx250s_teleop.homing_node:main',
             'joystick_node = wx250s_teleop.joystick_node:main',
             'shrine_build_node = wx250s_teleop.shrine_build_node:main',
+            'state_change_node = wx250s_teleop.state_change_node:main',
         ],
     },
 )

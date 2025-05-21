@@ -7,4 +7,5 @@
         <param name="deadzone" value="0.1"/>
     </node>
     <node pkg="wx250s_teleop" exec="shrine_build_node" />
+    <node pkg="wx250s_teleop" exec="state_change_node" />
 </launch>
