@@ -247,7 +247,7 @@ class PickAndPlaceNode(Node):
         return goalvalid
     
     
-    def movePillar(self, xpick, ypick, xplace, yplace, zplace):
+    def movePillar(self, xpick, ypick, xplace, yplace, zplace, ryplace):
 
         # moves:
         # 1. go up [go from current position and orientation to the origin position with origin orientation]
@@ -275,7 +275,7 @@ class PickAndPlaceNode(Node):
             
         self.move(mov2, fr=False, ry=30, rx=0, rz=moving)
 
-        self.move(mov3, fr=False, ry=90, rx=0, rz=moving)
+        self.move(mov3, fr=False, ry=ryplace, rx=0, rz=moving)
 
         self.grab()
 
@@ -283,7 +283,7 @@ class PickAndPlaceNode(Node):
         
         self.move(mov5, fr=False, ry=30, rx=0, rz=moving)
 
-        self.move(mov6, fr=False, ry=90, rx=0, rz=moving) 
+        self.move(mov6, fr=False, ry=ryplace, rx=0, rz=moving) 
 
         self.release() 
 
@@ -296,7 +296,7 @@ class PickAndPlaceNode(Node):
         return 0
     
 
-    def movePlatform(self, xpick, ypick, xplace, yplace, zplace):
+    def movePlatform(self, xpick, ypick, xplace, yplace, zplace, backmove, backadd, aboveplaceheight, aboveaddition):
 
         # Movements:
         # 1. Move to origin position
@@ -317,10 +317,10 @@ class PickAndPlaceNode(Node):
         mov2 = [xpick, ypick, 250.0] 
         mov3 = [xpick, ypick, 50.0]
         mov4 = [xpick*f, ypick*f, 250.0]
-        mov5 = [xplace*1.1, yplace*1.1, 400.0]
+        mov5 = [xplace, yplace, aboveplaceheight]
         mov6 = [xplace, yplace, zplace]
-        mov7 = [xplace-40, yplace-40, zplace]
-        mov8 = [xplace-40, yplace-40, 400.0]
+        mov7 = [xplace-backmove, yplace-backmove, zplace]
+        mov8 = [xplace-(backmove+backadd), yplace-(backmove+backadd), aboveplaceheight+aboveaddition]
 
         self.release()
 
@@ -336,7 +336,7 @@ class PickAndPlaceNode(Node):
 
         self.move(movorigin, fr=False, ry=0, rx=0, rz=moving) 
 
-        self.move(mov5, fr=False, ry=0, rx=45, rz=moving)
+        self.move(mov5, fr=False, ry=0, rx=60, rz=moving)
 
         self.move(mov5, fr=False, ry=-40, rx=90, rz=moving)
 
@@ -379,21 +379,21 @@ class PickAndPlaceNode(Node):
         if goalsvalid:
 
             ### level 1 ##################################
-            self.movePillar(190, -190, 275, 225, 55.0)
-            self.movePillar(260, -194, 175, 320, 55.0)
-            self.movePlatform(180, -325, 235, 285, 70.0)
+            self.movePillar(190, -190, 275, 225, 55.0, 90)
+            self.movePillar(260, -194, 175, 320, 55.0, 90)
+            self.movePlatform(180, -325, 235, 285, 70.0, 40.0, 0.0, 400.0, 0.0)
             ##############################################
-
+            
             ### level 2 ##################################
-            self.movePillar(190, -80, 275, 225, 125.0)
-            self.movePillar(260, -80, 175, 320, 125.0)
-            self.movePlatform(0, -285, 235, 285, 140.0)
+            self.movePillar(190, -80, 275, 225, 125.0, 90)
+            self.movePillar(260, -80, 175, 320, 125.0, 90)
+            self.movePlatform(0, -285, 235, 285, 140.0, 80.0, 0.0, 400.0, 0.0)
             ##############################################
-
+            
             ### level 3 ##################################
-            self.movePillar(190, 20, 375, 225, 195.0)
-            self.movePillar(260, 20, 175, 320, 195.0)
-            self.movePlatform(160, -265, 235, 285, 300.0)
+            self.movePillar(190, 20, 375, 225, 195.0, 45)
+            self.movePillar(260, 20, 175, 320, 195.0, 45)
+            self.movePlatform(160, -265, 235, 285, 300.0, 80.0, 70.0, 450.0, 0.0)
             ##############################################
 
             response.success = True
