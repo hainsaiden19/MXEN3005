@@ -136,8 +136,7 @@ class JoystickNode(Node):
     def timer_callback(self):
 
         if self.execution_delay > 50:
-        
-            #self.limiter += 1
+
             if self.execution_delay > 50 and self.execution_delay < 52:
                 self.get_logger().info(f'{self.joystickvalues.axes}')
 
@@ -169,7 +168,6 @@ class JoystickNode(Node):
 
                 case 2:
                     if self.newstate == True and self.shrinelimiter == 1:
-                        #self.shrinelimiter = 0
                         self.get_logger().info(f'### Shrine Build Mode ###')
                         self.shrinebuildMode()
                         self.newstate = False
