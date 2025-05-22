@@ -31,6 +31,7 @@ setup(
             'joystick_node = wx250s_teleop.joystick_node:main',
             'shrine_build_node = wx250s_teleop.shrine_build_node:main',
             'state_change_node = wx250s_teleop.state_change_node:main',
+            'testing_node = wx250s_teleop.testing_node:main',
         ],
     },
 )
