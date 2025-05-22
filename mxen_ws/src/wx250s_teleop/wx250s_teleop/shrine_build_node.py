@@ -131,8 +131,10 @@ class ShrineBuildNode(Node):
             upper_limit = 150
             i = 0
             while (not goalreached) and (i < upper_limit) and (not self.goal_abort):
-
-                htm_current, _ = fk(self.xarm.get_joints())
+                #time.sleep(0.1)
+                #self.get_logger().info(f'{self.xarm.get_joints()}')
+                current_joints = np.array(self.xarm.get_joints())
+                htm_current, _ = fk(current_joints)
 
                 currentpos = htm_current[0:3, 3]
 
@@ -405,6 +407,11 @@ class ShrineBuildNode(Node):
         self.get_logger().info("## Executing Shrine Build ##")
 
         result = ShrineBuild.Result()
+
+        self.xarm.get_joints()
+        self.xarm.home()
+        self.xarm.get_joints()
+        time.sleep(3)
         
         ### level 1 ##################################
         self.movePillar(190, -190, 275, 225, 55.0, 90)

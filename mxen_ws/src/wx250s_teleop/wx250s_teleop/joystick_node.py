@@ -33,6 +33,9 @@ class JoystickNode(Node):
         self.griplimiter = 0
         self.newgoal = True
         self.cancelrequest = False
+        self.limiter = 0
+
+        self.newstate = False
 
         self.goal_id = UUID(uuid=list(uuid.uuid4().bytes))
         self.goal_future = Future()
@@ -44,12 +47,9 @@ class JoystickNode(Node):
         # 1 : Cartesian Mode
         # 2 : Shrine Build Mode
         # Default : 0 : Joint Mode
+        self.robotstate = 0
 
-        self.robotstate = 2
-
-        self.xarm.home()
-        time.sleep(2)
-
+        
         self.currentpos = np.array(self.xarm.get_joints())
         #######################
         
@@ -62,6 +62,10 @@ class JoystickNode(Node):
 
         ### Action Client ###
         self.action_client = ActionClient(self, ShrineBuild, "build_shrine")
+
+
+        self.xarm.home()
+        #time.sleep(20)
 
 
 
@@ -86,20 +90,23 @@ class JoystickNode(Node):
             self.griplimiter = 1
 
 
-        jointmode_button = self.joystickvalues.buttons[dontknow]
+        jointmode_button = self.joystickvalues.buttons[9]
         if jointmode_button > 0:
             self.robotstate = 0
             self.cancelrequest = True
+            self.newstate = True
         
-        cartesianmode_button = self.joystickvalues.buttons[dontknow]
+        cartesianmode_button = self.joystickvalues.buttons[8]
         if cartesianmode_button > 0:
             self.robotstate = 1
             self.cancelrequest = True
+            self.newstate = True
 
-        shrinebuildmode_button = self.joystickvalues.buttons[1]
+        shrinebuildmode_button = self.joystickvalues.buttons[0]
         if shrinebuildmode_button > 0:
             self.robotstate = 2
             self.newgoal = True
+            self.newstate = True
 
         return 0
 
@@ -107,26 +114,37 @@ class JoystickNode(Node):
     ### Master function ###
     ### Executes all state changes ###
     def timer_callback(self):
+        
+        self.limiter += 1
+        if (self.limiter % 10) == 0:
+            self.get_logger().info(f'{self.joystickvalues.axes}')
 
-        self.tester += 1
-
-        if self.tester == 100:
-            self.cancelshrineBuild()
-    
         match self.robotstate:
             case 0:
+                if self.newstate == True:
+                    self.get_logger().info(f'### Joint Mode ###')
+                    self.newstate = False
+
                 if self.cancelrequest == True:
                     self.cancelshrineBuild()
                     self.cancelrequest = False
                 self.jointMode()
 
             case 1:
+                if self.newstate == True:
+                    self.get_logger().info(f'### Cartesian Mode ###')
+                    self.newstate = False
+
                 if self.cancelrequest == True:
                     self.cancelshrineBuild()
                     self.cancelrequest = False
                 self.cartesianMode()
 
             case 2:
+                if self.newstate == True:
+                    self.get_logger().info(f'### Shrine Build Mode ###')
+                    self.newstate = False
+
                 self.shrinebuildMode()
 
 
@@ -134,14 +152,13 @@ class JoystickNode(Node):
     
     ### Joint Mode ###
     def jointMode(self):
-        joystick_input = np.delete(np.array(self.joystickvalues.axes), [2, 5])
         
-        j1 = joystick_input[2]
-        j2 = joystick_input[3]
-        j3 = joystick_input[1]
-        j4 = -1*joystick_input[0]
-        j5 = joystick_input[5]
-        j6 = joystick_input[4]
+        j1 = self.joystickvalues.axes[3]
+        j2 = -1*self.joystickvalues.axes[4]
+        j3 = self.joystickvalues.axes[1]
+        j4 = -1*self.joystickvalues.axes[0]
+        j5 = self.joystickvalues.axes[7]
+        j6 = -1*self.joystickvalues.axes[6]
 
         jointmove = np.array([j1, j2, j3, j4, j5, j6])
         prop_gain = 3
@@ -153,6 +170,7 @@ class JoystickNode(Node):
         
         elif np.any(jointmove < 0.1) and np.any(jointmove > -0.1):
             if self.dead  == 1:
+                self.currentpos = self.xarm.get_joints()
                 self.xarm.set_joints(self.currentpos, "high_acc")
                 self.dead  = 0
 
@@ -191,6 +209,7 @@ class JoystickNode(Node):
 
     def shrinebuildMode(self):
         if self.newgoal == True:
+            self.cancelshrineBuild()
             self.get_logger().info(f'### Shrine Build Requested ###')
             goal = ShrineBuild.Goal()
             goal.buildshrine = True
