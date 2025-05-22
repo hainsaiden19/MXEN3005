@@ -34,7 +34,7 @@ class JoystickNode(Node):
         self.newgoal = True
         self.cancelrequest = False
         self.limiter = 0
-
+        self.shrinelimiter = 0
         
         self.newstate = False
 
@@ -44,6 +44,8 @@ class JoystickNode(Node):
         self.tester = 0
 
         self.execution_delay = 0
+
+        
 
         # Modes:
         # 0 : Joint Mode
@@ -124,6 +126,7 @@ class JoystickNode(Node):
                 self.robotstate = 2
                 self.newgoal = True
                 self.newstate = True
+                self.shrinelimiter += 1
 
         return 0
 
@@ -149,6 +152,7 @@ class JoystickNode(Node):
                     if self.cancelrequest == True:
                         self.cancelshrineBuild()
                         self.cancelrequest = False
+                    self.shrinelimiter = 0
                     self.jointMode()
 
                 case 1:
@@ -160,10 +164,12 @@ class JoystickNode(Node):
                     if self.cancelrequest == True:
                         self.cancelshrineBuild()
                         self.cancelrequest = False
+                    self.shrinelimiter = 0
                     self.cartesianMode()
 
                 case 2:
-                    if self.newstate == True:
+                    if self.newstate == True and self.shrinelimiter == 1:
+                        #self.shrinelimiter = 0
                         self.get_logger().info(f'### Shrine Build Mode ###')
                         self.shrinebuildMode()
                         self.newstate = False

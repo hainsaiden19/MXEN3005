@@ -12,10 +12,9 @@ setup(
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
-        (
-            os.path.join("share", package_name, "launch"),
-            glob(os.path.join("launch", "*launch.[pxy][yma]*")),
-        ),
+        (os.path.join("share", package_name, "launch"),glob(os.path.join("launch", "*launch.[pxy][yma]*"))),
+        (os.path.join('share', package_name, 'urdf'), glob('urdf/*')),
+        (os.path.join('share', package_name, 'config'), glob('config/*')),
     ],
     install_requires=['setuptools'],
     zip_safe=True,
@@ -32,6 +31,7 @@ setup(
             'shrine_build_node = wx250s_teleop.shrine_build_node:main',
             'state_change_node = wx250s_teleop.state_change_node:main',
             'testing_node = wx250s_teleop.testing_node:main',
+            'joint_state_node = wx250s_teleop.joint_state_node:main',
         ],
     },
 )

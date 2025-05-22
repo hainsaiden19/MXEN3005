@@ -343,7 +343,7 @@ class ShrineBuildNode(Node):
         return 0
     
 
-    def movePlatform(self, xpick, ypick, xplace, yplace, zplace, backmove, backadd, aboveplaceheight, aboveaddition):
+    def movePlatform(self, xpick, ypick, xplace, yplace, zplace, backmove, backadd, aboveplaceheight, aboveaddition, orientation):
 
         # Movements:
         # 1. Move to origin position
@@ -383,15 +383,15 @@ class ShrineBuildNode(Node):
 
         self.move(movorigin, fr=False, ry=0, rx=0, rz=moving) 
 
-        self.move(mov5, fr=False, ry=0, rx=60, rz=moving)
+        self.move(mov5, fr=False, ry=0, rx=orientation*60, rz=moving)
 
-        self.move(mov5, fr=False, ry=-40, rx=90, rz=moving)
+        self.move(mov5, fr=False, ry=-40, rx=orientation*90, rz=moving)
 
-        self.move(mov6, fr=False, ry=0, rx=90, rz=moving) 
+        self.move(mov6, fr=False, ry=0, rx=orientation*90, rz=moving) 
 
         self.release() 
 
-        self.move(mov7, fr=False, ry=15, rx=90, rz=moving) 
+        self.move(mov7, fr=False, ry=15, rx=orientation*90, rz=moving) 
 
         self.move(mov8, fr=False, ry=30, rx=0, rz=moving) 
 
@@ -416,19 +416,19 @@ class ShrineBuildNode(Node):
         ### level 1 ##################################
         self.movePillar(190, -190, 275, 225, 55.0, 90)
         self.movePillar(260, -194, 175, 320, 55.0, 90)
-        self.movePlatform(180, -325, 235, 285, 70.0, 40.0, 0.0, 400.0, 0.0)
+        self.movePlatform(180, -325, 235, 285, 70.0, 40.0, 0.0, 400.0, 0.0, 1)
         ##############################################
         
         ### level 2 ##################################
         self.movePillar(190, -80, 275, 225, 125.0, 90)
         self.movePillar(260, -80, 175, 320, 125.0, 90)
-        self.movePlatform(0, -285, 235, 285, 140.0, 80.0, 0.0, 400.0, 0.0)
+        self.movePlatform(0, -285, 235, 285, 140.0, 80.0, 0.0, 400.0, 0.0, -1)
         ##############################################
         
         ### level 3 ##################################
         self.movePillar(190, 20, 375, 225, 195.0, 45)
         self.movePillar(260, 20, 175, 320, 195.0, 45)
-        self.movePlatform(160, -265, 235, 285, 300.0, 80.0, 70.0, 450.0, 0.0)
+        self.movePlatform(160, -265, 235, 285, 300.0, 80.0, 70.0, 450.0, 0.0, 1)
         ##############################################
 
         self.get_logger().info("## Shrine Built ##")

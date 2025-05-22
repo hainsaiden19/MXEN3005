@@ -2,6 +2,7 @@
     <executable cmd="python3 xarmserver.py" cwd="/home/robot/ros2jazzy/.ros2jazzysetup/u2d2server" output="screen" />
     <node pkg="wx250s_teleop" exec="shrine_build_node" />
     <node pkg="wx250s_teleop" exec="joystick_node" />
+    <node pkg="wx250s_teleop" exec="joint_state_node" />
     <node pkg="joy" exec="joy_node" >
         <param name="deadzone" value="0.1"/>
     </node>
