@@ -83,7 +83,7 @@ class ShrineBuildNode(Node):
     def grab(self):
         if self.goal_abort == False:
             self.xarm.grip(1)
-            time.sleep(1)
+            time.sleep(2)
         return 0
     
 
@@ -107,7 +107,7 @@ class ShrineBuildNode(Node):
             return result
 
         else:
-            step_size=5
+            step_size=20
 
             joint_goals = self.get_jointgoals(xyzgoal, step_size, fixedrotation=fr, rotation_y=ry, rotation_x=rx, rotation_z=rz)
 
@@ -115,10 +115,17 @@ class ShrineBuildNode(Node):
 
             error_query = self.xarm.is_goal_valid(final_pos)
 
-            if (error_query == 0) and (not self.goal_abort):
-                self.xarm.set_joints(final_pos, motion_mode="low_acc")
-                time.sleep(0.05)
-                self.xarm.set_joints(final_pos, motion_mode="low_acc")
+            #if (error_query == 0) and (not self.goal_abort):
+
+            if error_query == 12:
+                final_pos[3] = 0.0
+
+            if error_query == 13:
+                final_pos[5] = 0.0
+
+            self.xarm.set_joints(final_pos, motion_mode="low_acc")
+            time.sleep(0.05)
+            self.xarm.set_joints(final_pos, motion_mode="low_acc")
 
 
             if (error_query != 0):
@@ -152,6 +159,8 @@ class ShrineBuildNode(Node):
                     self.get_logger().info(f'\n\nReached Position\n')
 
                 i += 1
+
+            time.sleep(0.1)
            
 
         return 0
@@ -309,18 +318,22 @@ class ShrineBuildNode(Node):
         movorigin = [350, 0.0, 400.0]
         
         f = 1
-        mov2 = [xpick*f, ypick*f, 300.0]
-        mov3 = [xpick, ypick, 50.0]
-        mov4 = [xpick*f, ypick*f, 300.0]
-        mov5 = [xplace*f, yplace*f, 300.0]
+        mov2 = [xpick, ypick, 350.0]
+        move2_1 = [xpick, ypick, 150.0]
+        mov3 = [xpick, ypick, 40.0]
+        mov4 = [xpick+30, ypick+30, 350.0]
+        mov5 = [xplace, yplace, 300.0]
         mov6 = [xplace, yplace, zplace]
-        mov7 = [xplace*f, yplace*f, 300.0]
+        mov6_1 = [xplace+30, yplace+30, 200.0]
+        mov7 = [xplace+20, yplace+20, 350.0]
 
         self.release()
 
         self.move(movorigin, fr=False, ry=0, rx=0, rz=moving)
 
         self.move(mov2, fr=False, ry=30, rx=0, rz=moving)
+
+        self.move(move2_1, fr=False, ry=60, rx=0, rz=moving)
 
         self.move(mov3, fr=False, ry=ryplace, rx=0, rz=moving)
 
@@ -333,6 +346,10 @@ class ShrineBuildNode(Node):
         self.move(mov6, fr=False, ry=ryplace, rx=0, rz=moving) 
 
         self.release() 
+
+        self.move(mov6_1, fr=False, ry=30, rx=0, rz=moving) 
+
+        #self.xarm.home()
 
         self.move(mov7, fr=False, ry=30, rx=0, rz=moving) 
 
@@ -362,9 +379,10 @@ class ShrineBuildNode(Node):
         f = 0.7
         movorigin = [350, 0.0, 400.0]
         mov2 = [xpick, ypick, 250.0] 
-        mov3 = [xpick, ypick, 50.0]
+        mov2_1 = [xpick, ypick, 100.0] 
+        mov3 = [xpick, ypick, 40.0]
         mov4 = [xpick*f, ypick*f, 250.0]
-        mov5 = [xplace, yplace, aboveplaceheight]
+        mov5 = [xplace+30, yplace+30, aboveplaceheight]
         mov6 = [xplace, yplace, zplace]
         mov7 = [xplace-backmove, yplace-backmove, zplace]
         mov8 = [xplace-(backmove+backadd), yplace-(backmove+backadd), aboveplaceheight+aboveaddition]
@@ -374,6 +392,8 @@ class ShrineBuildNode(Node):
         self.move(movorigin, fr=False, ry=0, rx=0, rz=moving)
 
         self.move(mov2, fr=False, ry=30, rx=rx_pick, rz=moving)
+
+        self.move(mov2_1, fr=False, ry=60, rx=rx_pick, rz=moving)
 
         self.move(mov3, fr=False, ry=90, rx=0.0, rz=0.0)
 
@@ -391,9 +411,11 @@ class ShrineBuildNode(Node):
 
         self.release() 
 
-        self.move(mov7, fr=False, ry=15, rx=orientation*90, rz=moving) 
+        self.move(mov7, fr=False, ry=20, rx=orientation*90, rz=moving) 
 
-        self.move(mov8, fr=False, ry=30, rx=0, rz=moving) 
+        #self.move(mov8, fr=False, ry=60, rx=0, rz=moving) 
+
+        self.xarm.home()
 
         #self.move(movorigin, fr=False, ry=0, rx=0, rz=moving) 
 
@@ -416,19 +438,19 @@ class ShrineBuildNode(Node):
         ### level 1 ##################################
         self.movePillar(190, -190, 275, 225, 55.0, 90)
         self.movePillar(260, -194, 175, 320, 55.0, 90)
-        self.movePlatform(180, -325, 235, 285, 70.0, 40.0, 0.0, 400.0, 0.0, 1)
+        self.movePlatform(180, -325, 215, 265, 100.0, 40.0, 0.0, 400.0, 20.0, 1)
         ##############################################
         
         ### level 2 ##################################
-        self.movePillar(190, -80, 275, 225, 125.0, 90)
-        self.movePillar(260, -80, 175, 320, 125.0, 90)
-        self.movePlatform(0, -285, 235, 285, 140.0, 80.0, 0.0, 400.0, 0.0, -1)
+        self.movePillar(190, -80, 275, 215, 135.0, 90)
+        self.movePillar(260, -80, 175, 320, 135.0, 90)
+        self.movePlatform(0, -285, 210, 260, 100.0, 320.0, 20.0, 400.0, 20.0, -1)
         ##############################################
         
         ### level 3 ##################################
-        self.movePillar(190, 20, 375, 225, 195.0, 45)
-        self.movePillar(260, 20, 175, 320, 195.0, 45)
-        self.movePlatform(160, -265, 235, 285, 300.0, 80.0, 70.0, 450.0, 0.0, 1)
+        self.movePillar(190, 10, 275, 225, 195.0, 45)
+        self.movePillar(260, 10, 175, 320, 195.0, 45)
+        self.movePlatform(160, -265, 210, 260, 100.0, 360.0, 70.0, 450.0, 20.0, 1)
         ##############################################
 
         self.get_logger().info("## Shrine Built ##")
